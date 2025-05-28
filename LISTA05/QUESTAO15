@@ -1,0 +1,40 @@
+#include <stdio.h>
+
+int somaRecursiva(int n) {
+    if (n <= 0) {
+        return 0;
+    } else {
+        return n + somaRecursiva(n - 1);
+    }
+}
+
+int main() {
+    int numero;
+    int resultado;
+
+    printf("Digite um número inteiro N (positivo) para calcular a soma de 1 até N: ");
+    if (scanf("%d", &numero) != 1) {
+        printf("Entrada inválida.\n");
+        return 1;
+    }
+
+    if (numero < 0) {
+        printf("O número deve ser positivo para esta definição de soma (1 até N).\n");
+        printf("Considerando N = 0, a soma é 0.\n");
+        resultado = somaRecursiva(0);
+    } else {
+        resultado = somaRecursiva(numero);
+    }
+
+
+    printf("A soma dos números de 1 até %d é: %d\n", (numero < 0 ? 0 : numero) , resultado);
+
+    printf("\nOutros testes:\n");
+    printf("Soma de 1 até 5: %d\n", somaRecursiva(5));
+    printf("Soma de 1 até 1: %d\n", somaRecursiva(1));
+    printf("Soma de 1 até 0: %d\n", somaRecursiva(0));
+    printf("Soma de 1 até -3 (tratado como 0): %d\n", somaRecursiva(-3));
+
+
+    return 0;
+}

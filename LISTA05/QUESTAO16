@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <math.h> // Para NAN (Not a Number)
+
+void operacoesBasicas(double num1, double num2, double *soma, double *subtracao, double *multiplicacao, double *divisao) {
+    if (soma != NULL) {
+        *soma = num1 + num2;
+    }
+    if (subtracao != NULL) {
+        *subtracao = num1 - num2;
+    }
+    if (multiplicacao != NULL) {
+        *multiplicacao = num1 * num2;
+    }
+    if (divisao != NULL) {
+        if (num2 == 0.0) {
+            *divisao = NAN; // Ou algum outro valor para indicar erro/indefinição
+        } else {
+            *divisao = num1 / num2;
+        }
+    }
+}
+
+int main() {
+    double n1, n2;
+    double res_soma, res_sub, res_mul, res_div;
+
+    printf("Digite o primeiro número: ");
+    if (scanf("%lf", &n1) != 1) {
+        printf("Entrada inválida para o primeiro número.\n");
+        return 1;
+    }
+
+    printf("Digite o segundo número: ");
+    if (scanf("%lf", &n2) != 1) {
+        printf("Entrada inválida para o segundo número.\n");
+        return 1;
+    }
+
+    operacoesBasicas(n1, n2, &res_soma, &res_sub, &res_mul, &res_div);
+
+    printf("\nResultados das operações:\n");
+    printf("%.2f + %.2f = %.2f\n", n1, n2, res_soma);
+    printf("%.2f - %.2f = %.2f\n", n1, n2, res_sub);
+    printf("%.2f * %.2f = %.2f\n", n1, n2, res_mul);
+
+    if (n2 == 0.0) {
+        printf("%.2f / %.2f = Indefinido (divisão por zero)\n", n1, n2);
+    } else {
+        printf("%.2f / %.2f = %.2f\n", n1, n2, res_div);
+    }
+
+    printf("\nTeste com ponteiros NULL (nenhuma operação deve ser calculada para o ponteiro NULL):\n");
+    double num_a = 10.0, num_b = 2.0;
+    double soma_teste, div_teste;
+
+    // Calcula apenas soma e divisão
+    operacoesBasicas(num_a, num_b, &soma_teste, NULL, NULL, &div_teste);
+    printf("%.2f + %.2f = %.2f\n", num_a, num_b, soma_teste);
+    printf("%.2f / %.2f = %.2f\n", num_a, num_b, div_teste);
+
+
+    printf("\nTeste com divisão por zero:\n");
+    double num_c = 5.0, num_d = 0.0;
+    double div_zero_teste;
+    operacoesBasicas(num_c, num_d, NULL, NULL, NULL, &div_zero_teste);
+    if (isnan(div_zero_teste)) {
+         printf("%.2f / %.2f = Divisão por zero resultou em NAN.\n", num_c, num_d);
+    } else {
+         printf("%.2f / %.2f = %.2f\n", num_c, num_d, div_zero_teste);
+    }
+
+
+    return 0;
+}

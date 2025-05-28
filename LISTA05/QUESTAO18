@@ -1,0 +1,53 @@
+#include <stdio.h>
+
+struct Data {
+    int dia;
+    int mes;
+    int ano;
+};
+
+struct Data criaData(int dia, int mes, int ano) {
+    struct Data nova_data;
+    nova_data.dia = dia;
+    nova_data.mes = mes;
+    nova_data.ano = ano;
+    return nova_data;
+}
+
+int main() {
+    int d, m, a;
+    struct Data data1;
+    struct Data data2;
+
+    printf("Digite o dia: ");
+    if (scanf("%d", &d) != 1) {
+        printf("Entrada inválida para o dia.\n");
+        return 1;
+    }
+
+    printf("Digite o mês: ");
+    if (scanf("%d", &m) != 1) {
+        printf("Entrada inválida para o mês.\n");
+        return 1;
+    }
+
+    printf("Digite o ano: ");
+    if (scanf("%d", &a) != 1) {
+        printf("Entrada inválida para o ano.\n");
+        return 1;
+    }
+    
+    data1 = criaData(d, m, a);
+
+    printf("\nData criada (data1): %02d/%02d/%04d\n", data1.dia, data1.mes, data1.ano);
+
+    data2 = criaData(25, 12, 2025);
+    printf("Outra data criada (data2): %02d/%02d/%04d\n", data2.dia, data2.mes, data2.ano);
+    
+    struct Data data_invalida_exemplo = criaData(32, 13, -200);
+    printf("Exemplo com valores potencialmente 'inválidos' (função apenas atribui):\n");
+    printf("Data 'inválida': %02d/%02d/%04d\n", data_invalida_exemplo.dia, data_invalida_exemplo.mes, data_invalida_exemplo.ano);
+
+
+    return 0;
+}

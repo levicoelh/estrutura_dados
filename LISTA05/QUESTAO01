@@ -1,0 +1,10 @@
+#include <stdio.h>
+
+void saudacao() {
+    printf("Olá, mundo!\n");
+}
+
+int main() {
+    saudacao();
+    return 0;
+}

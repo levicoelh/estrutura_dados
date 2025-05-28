@@ -1,0 +1,62 @@
+#include <stdio.h>
+
+int buscaElemento(int array[], int tamanho, int valor) {
+    for (int i = 0; i < tamanho; i++) {
+        if (array[i] == valor) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+int main() {
+    int numeros[] = {10, 25, 5, 42, 17, 8, 30};
+    int tamanho_array = sizeof(numeros) / sizeof(numeros[0]);
+    int valor_procurado;
+    int posicao;
+
+    printf("Array: ");
+    for (int i = 0; i < tamanho_array; i++) {
+        printf("%d ", numeros[i]);
+    }
+    printf("\n");
+
+    printf("Digite o valor a ser buscado no array: ");
+    if (scanf("%d", &valor_procurado) != 1) {
+        printf("Entrada inválida.\n");
+        return 1;
+    }
+
+    posicao = buscaElemento(numeros, tamanho_array, valor_procurado);
+
+    if (posicao != -1) {
+        printf("O valor %d foi encontrado na posição (índice) %d do array.\n", valor_procurado, posicao);
+    } else {
+        printf("O valor %d não foi encontrado no array.\n", valor_procurado);
+    }
+
+    // Teste com um valor que não existe
+    valor_procurado = 99;
+    posicao = buscaElemento(numeros, tamanho_array, valor_procurado);
+    printf("\nBuscando pelo valor %d:\n", valor_procurado);
+    if (posicao != -1) {
+        printf("O valor %d foi encontrado na posição (índice) %d do array.\n", valor_procurado, posicao);
+    } else {
+        printf("O valor %d não foi encontrado no array.\n", valor_procurado);
+    }
+    
+    // Teste com array vazio
+    int array_vazio[] = {};
+    int tamanho_vazio = 0;
+    valor_procurado = 5;
+    posicao = buscaElemento(array_vazio, tamanho_vazio, valor_procurado);
+    printf("\nBuscando pelo valor %d em um array vazio:\n", valor_procurado);
+    if (posicao != -1) {
+        printf("O valor %d foi encontrado na posição (índice) %d do array.\n", valor_procurado, posicao);
+    } else {
+        printf("O valor %d não foi encontrado no array.\n", valor_procurado);
+    }
+
+
+    return 0;
+}

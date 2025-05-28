@@ -1,0 +1,45 @@
+#include <stdio.h>
+
+int fibonacci(int n) {
+    if (n <= 0) {
+        return 0;
+    } else if (n == 1) {
+        return 1;
+    } else {
+        return fibonacci(n - 1) + fibonacci(n - 2);
+    }
+}
+
+int main() {
+    int termo;
+    int resultado;
+
+    printf("Digite o termo (n) da sequência de Fibonacci que deseja calcular (n >= 0): ");
+    if (scanf("%d", &termo) != 1) {
+        printf("Entrada inválida.\n");
+        return 1;
+    }
+
+    if (termo < 0) {
+        printf("O termo deve ser maior ou igual a 0.\n");
+        printf("Calculando para n = 0 por padrão.\n");
+        resultado = fibonacci(0);
+        termo = 0; 
+    } else {
+        resultado = fibonacci(termo);
+    }
+
+
+    printf("O %dº termo da sequência de Fibonacci é: %d\n", termo, resultado);
+
+    printf("\nOutros exemplos:\n");
+    printf("F(0) = %d\n", fibonacci(0));
+    printf("F(1) = %d\n", fibonacci(1));
+    printf("F(2) = %d\n", fibonacci(2));
+    printf("F(3) = %d\n", fibonacci(3));
+    printf("F(4) = %d\n", fibonacci(4));
+    printf("F(5) = %d\n", fibonacci(5));
+    printf("F(10) = %d\n", fibonacci(10)); // Começa a ficar lento com recursão simples aqui
+
+    return 0;
+}

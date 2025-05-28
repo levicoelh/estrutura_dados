@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int contaVogais(const char *str) {
+    int contagem = 0;
+    if (str == NULL) {
+        return 0;
+    }
+    for (int i = 0; str[i] != '\0'; i++) {
+        char caractere_atual = tolower(str[i]);
+        if (caractere_atual == 'a' || caractere_atual == 'e' ||
+            caractere_atual == 'i' || caractere_atual == 'o' ||
+            caractere_atual == 'u') {
+            contagem++;
+        }
+    }
+    return contagem;
+}
+
+int main() {
+    char texto1[] = "Ola Mundo";
+    char texto2[] = "AEIOU aeiou";
+    char texto3[] = "Rhythm";
+    char texto4[] = "";
+    char *texto5 = NULL;
+
+    printf("String: '%s', Vogais: %d\n", texto1, contaVogais(texto1));
+    printf("String: '%s', Vogais: %d\n", texto2, contaVogais(texto2));
+    printf("String: '%s', Vogais: %d\n", texto3, contaVogais(texto3));
+    printf("String: '%s', Vogais: %d\n", texto4, contaVogais(texto4));
+    printf("String: (NULL), Vogais: %d\n", contaVogais(texto5));
+    
+    char buffer[100];
+    printf("\nDigite uma string para contar as vogais: ");
+    if (fgets(buffer, sizeof(buffer), stdin) != NULL) {
+        size_t len = strlen(buffer);
+        if (len > 0 && buffer[len-1] == '\n') {
+            buffer[len-1] = '\0';
+        }
+        printf("String: '%s', Vogais: %d\n", buffer, contaVogais(buffer));
+    }
+
+
+    return 0;
+}
