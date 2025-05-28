@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void ler_sequencia_digitos(char *seq, int n, const char *nome_seq) {
+    printf("Digite os %d dígitos da %s (sem espaços, ex: 123): ", n, nome_seq);
+    char buffer_temp[n + 2];
+    if (scanf("%s", buffer_temp) != 1) {
+        fprintf(stderr, "Erro ao ler a %s.\n", nome_seq);
+        exit(EXIT_FAILURE);
+    }
+
+    if (strlen(buffer_temp) != n) {
+        fprintf(stderr, "A %s deve ter exatamente %d dígitos.\n", nome_seq, n);
+        exit(EXIT_FAILURE);
+    }
+
+    for (int i = 0; i < n; i++) {
+        if (buffer_temp[i] < '0' || buffer_temp[i] > '9') {
+            fprintf(stderr, "Dígito inválido '%c' na %s.\n", buffer_temp[i], nome_seq);
+            exit(EXIT_FAILURE);
+        }
+        seq[i] = buffer_temp[i];
+    }
+    seq[n] = '\0';
+}
+
+int main() {
+    int n;
+    char *num1_str;
+    char *num2_str;
+    char *soma_str;
+    int carry = 0;
+    int i;
+
+    printf("Digite o número de dígitos (n) para cada sequência: ");
+    if (scanf("%d", &n) != 1 || n < 0) {
+        fprintf(stderr, "Número de dígitos inválido.\n");
+        return 1;
+    }
+    
+    if (n == 0) {
+        printf("\nSequência da soma: 0\n");
+        return 0;
+    }
+
+    num1_str = (char *)malloc((n + 1) * sizeof(char));
+    num2_str = (char *)malloc((n + 1) * sizeof(char));
+    soma_str = (char *)malloc((n + 2) * sizeof(char));
+
+    if (num1_str == NULL || num2_str == NULL || soma_str == NULL) {
+        fprintf(stderr, "Erro: Falha ao alocar memória!\n");
+        free(num1_str);
+        free(num2_str);
+        free(soma_str);
+        return 1;
+    }
+
+    ler_sequencia_digitos(num1_str, n, "primeira sequência");
+    ler_sequencia_digitos(num2_str, n, "segunda sequência");
+
+    soma_str[n + 1] = '\0';
+
+    for (i = n - 1; i >= 0; i--) {
+        int digito1 = num1_str[i] - '0';
+        int digito2 = num2_str[i] - '0';
+        int soma_digitos = digito1 + digito2 + carry;
+        soma_str[i + 1] = (soma_digitos % 10) + '0';
+        carry = soma_digitos / 10;
+    }
+
+    soma_str[0] = carry + '0';
+
+    printf("\nSequência da soma:

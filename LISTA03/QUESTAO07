@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int m, n;
+    int *seq1, *seq2, *resultado;
+    int i, j, k;
+    int cap_resultado;
+
+    printf("Digite o número de elementos da primeira sequência (m): ");
+    if (scanf("%d", &m) != 1 || m < 0) {
+        printf("Número de elementos inválido para a primeira sequência.\n");
+        return 1;
+    }
+
+    if (m > 0) {
+        seq1 = (int *)malloc(m * sizeof(int));
+        if (seq1 == NULL) {
+            printf("Erro: Falha ao alocar memória para a primeira sequência!\n");
+            return 1;
+        }
+        printf("Digite os %d elementos ordenados da primeira sequência:\n", m);
+        for (i = 0; i < m; i++) {
+            printf("seq1[%d]: ", i);
+            if (scanf("%d", &seq1[i]) != 1) {
+                printf("Entrada inválida.\n");
+                free(seq1);
+                return 1;
+            }
+        }
+    } else {
+        seq1 = NULL;
+    }
+
+    printf("Digite o número de elementos da segunda sequência (n): ");
+    if (scanf("%d", &n) != 1 || n < 0) {
+        printf("Número de elementos inválido para a segunda sequência.\n");
+        if (m > 0) free(seq1);
+        return 1;
+    }
+
+    if (n > 0) {
+        seq2 = (int *)malloc(n * sizeof(int));
+        if (seq2 == NULL) {
+            printf("Erro: Falha ao alocar memória para a segunda sequência!\n");
+            if (m > 0) free(seq1);
+            return 1;
+        }
+        printf("Digite os %d elementos ordenados da segunda sequência:\n", n);
+        for (i = 0; i < n; i++) {
+            printf("seq2[%d]: ", i);
+            if (scanf("%d", &seq2[i]) != 1) {
+                printf("Entrada inválida.\n");
+                if (m > 0) free(seq1);
+                

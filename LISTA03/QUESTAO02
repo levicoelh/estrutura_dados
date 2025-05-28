@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+#define NUM_QUESTOES 30
+
+int main() {
+    char gabarito[NUM_QUESTOES + 1];
+    char respostas_aluno[NUM_QUESTOES + 1];
+    int num_alunos;
+    int acertos;
+    int i, j;
+
+    printf("Digite o gabarito da prova (%d questões, A, B, C, D ou E):\n", NUM_QUESTOES);
+    for (i = 0; i < NUM_QUESTOES; i++) {
+        char resposta_q;
+        int valido = 0;
+        while (!valido) {
+            printf("Questão %d: ", i + 1);
+            scanf(" %c", &resposta_q);
+            resposta_q = toupper(resposta_q);
+            if (resposta_q >= 'A' && resposta_q <= 'E') {
+                gabarito[i] = resposta_q;
+                valido = 1;
+            } else {
+                printf("Resposta inválida. Use A, B, C, D ou E.\n");
+            }
+        }
+    }
+    gabarito[NUM_QUESTOES] = '\0';
+
+    printf("\nDigite o número de alunos: ");
+    if (scanf("%d", &num_alunos) != 1 || num_alunos < 0) {
+        printf("Número de alunos inválido.\n");
+        return 1;
+    }
+
+    if (num_alunos == 0) {
+        printf("Nenhum aluno para processar.\n");
+        return 0;
+    }
+
+    for (i = 0; i < num_alunos; i++) {
+        printf("\n--- Aluno %d ---\n", i + 1);
+        acertos = 0;
+        printf("Digite as respostas do aluno %d (%d questões, A, B, C, D ou E):\n", i + 1, NUM_QUESTOES);
+
+        for (j = 0; j < NUM_QUESTOES; j++) {
+            char resposta_aluno_q;
+            int valido = 0;
+            while (!valido) {
+                printf("Questão %d: ", j + 1);
+                scanf(" %c", &resposta_aluno_q);
+                resposta_aluno_q = toupper(resposta_aluno_q);
+                if (resposta_aluno_q >= 'A' && resposta_aluno_q <= 'E') {
+                    respostas_aluno[j] = resposta_aluno_q;
+                    valido = 1;
+                } else {
+                    printf("Resposta inválida. Use A, B, C, D ou E.\n");
+                }
+            }
+        }
+        respostas_aluno[NUM_QUESTOES] = '\0';
+
+        for (j = 0; j < NUM_QUESTOES; j++) {
+            if (respostas_aluno[j] == gabarito[j]) {
+                acertos++;
+            }
+        }
+
+        printf("Número de acertos do Aluno %d: %d/%d\n", i + 1, acertos, NUM_QUESTOES);
+    }
+
+    return 0;
+}

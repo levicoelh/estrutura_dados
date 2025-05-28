@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int n_grau_p;
+    double *coef_p;
+    double *coef_derivada;
+    int n_grau_derivada;
+    int i;
+
+    printf("Digite o grau do polinômio p(x) (n): ");
+    if (scanf("%d", &n_grau_p) != 1 || n_grau_p < 0) {
+        fprintf(stderr, "Grau do polinômio inválido.\n");
+        return 1;
+    }
+
+    coef_p = (double *)malloc((n_grau_p + 1) * sizeof(double));
+    if (coef_p == NULL) {
+        fprintf(stderr, "Erro: Falha ao alocar memória para os coeficientes de p(x)!\n");
+        return 1;
+    }
+
+    printf("Digite os %d coeficientes do polinômio p(x) (a0 a %d), do menor para o maior grau:\n", n_grau_p + 1, n_grau_p);
+    for (i = 0; i <= n_grau_p; i++) {
+        printf("p_a%d: ", i);
+        if (scanf("%lf", &coef_p[i]) != 1) {
+            fprintf(stderr, "Entrada inválida para o coeficiente p_a%d.\n", i);
+            free(coef_p);
+            return 1;
+        }
+    }
+
+    if (n_grau_p == 0) {
+        n_grau_derivada = 0

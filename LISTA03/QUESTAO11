@@ -1,0 +1,71 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+int main() {
+    int n_grau_p;
+    double *coef_p;
+    int m_valores_alpha;
+    double alpha;
+    double *coef_q;
+    int n_grau_q;
+    double p_alpha;
+    int i, j;
+
+    printf("Digite o grau do polinômio p(x) (n): ");
+    if (scanf("%d", &n_grau_p) != 1 || n_grau_p < 0) {
+        fprintf(stderr, "Grau do polinômio inválido.\n");
+        return 1;
+    }
+
+    coef_p = (double *)malloc((n_grau_p + 1) * sizeof(double));
+    if (coef_p == NULL) {
+        fprintf(stderr, "Erro: Falha ao alocar memória para os coeficientes de p(x)!\n");
+        return 1;
+    }
+
+    printf("Digite os %d coeficientes do polinômio p(x) (a0 a %d), do menor para o maior grau:\n", n_grau_p + 1, n_grau_p);
+    for (i = 0; i <= n_grau_p; i++) {
+        printf("p_a%d: ", i);
+        if (scanf("%lf", &coef_p[i]) != 1) {
+            fprintf(stderr, "Entrada inválida para o coeficiente p_a%d.\n", i);
+            free(coef_p);
+            return 1;
+        }
+    }
+
+    printf("Digite o número de valores distintos de alpha (m): ");
+    if (scanf("%d", &m_valores_alpha) != 1 || m_valores_alpha < 0) {
+        fprintf(stderr, "Número de valores de alpha inválido.\n");
+        free(coef_p);
+        return 1;
+    }
+
+    for (i = 0; i < m_valores_alpha; i++) {
+        printf("\nDigite o valor de alpha_%d: ", i + 1);
+        if (scanf("%lf", &alpha) != 1) {
+            fprintf(stderr, "Entrada inválida para alpha_%d.\n", i + 1);
+            free(coef_p);
+            return 1;
+        }
+
+        if (n_grau_p == 0) {
+            n_grau_q = -1; 
+            p_alpha = coef_p[0];
+            printf("Para alpha = %.2f:\n", alpha);
+            printf("  q(x) é o polinômio nulo (grau -1)\n");
+            printf("  p(alpha) = %.2f\n", p_alpha);
+            continue;
+        }
+        
+        n_grau_q = n_grau_p - 1;
+        coef_q = (double *)malloc((n_grau_q + 1) * sizeof(double));
+        if (coef_q == NULL) {
+            fprintf(stderr, "Erro: Falha ao alocar memória para q(x) para alpha=%.2f!\n", alpha);
+            free(coef_p);
+            return 1;
+        }
+
+        coef_q[n_grau_q] = coef_p[n_grau_p];
+        for (j = n_grau_q - 1; j >= 0; j--) {
+            coef_q[j] = coef_p[j + 1] + alpha *

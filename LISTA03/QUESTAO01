@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int n;
+    int *numeros;
+
+    printf("Digite a quantidade de números na sequência (n): ");
+    if (scanf("%d", &n) != 1) {
+        printf("Erro ao ler a quantidade de números.\n");
+        return 1;
+    }
+
+    if (n < 0) {
+        printf("O número de elementos não pode ser negativo.\n");
+        return 1;
+    }
+    if (n == 0) {
+        printf("A sequência está vazia.\n");
+        return 0;
+    }
+
+    numeros = (int *)malloc(n * sizeof(int));
+
+    if (numeros == NULL) {
+        printf("Erro: Falha ao alocar memória!\n");
+        return 1;
+    }
+
+    printf("Digite os %d números inteiros, um por linha:\n", n);
+    for (int i = 0; i < n; i++) {
+        if (scanf("%d", &numeros[i]) != 1) {
+            printf("Erro ao ler o número na posição %d.\n", i + 1);
+            free(numeros);
+            return 1;
+        }
+    }
+
+    printf("\nSequência na ordem inversa:\n");
+    for (int i = n - 1; i >= 0; i--) {
+        printf("%d\n", numeros[i]);
+    }
+
+    free(numeros);
+
+    return 0;
+}

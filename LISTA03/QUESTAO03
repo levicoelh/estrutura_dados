@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int n;
+    int face;
+    int contagem_faces[6] = {0};
+    int i;
+
+    printf("Digite o número de lançamentos do dado (n): ");
+    if (scanf("%d", &n) != 1 || n < 0) {
+        printf("Número de lançamentos inválido.\n");
+        return 1;
+    }
+
+    if (n == 0) {
+        printf("Nenhum lançamento para processar.\n");
+        for (i = 0; i < 6; i++) {
+            printf("Face %d: 0 vezes\n", i + 1);
+        }
+        return 0;
+    }
+
+    printf("Digite os resultados dos %d lançamentos (números de 1 a 6):\n", n);
+    for (i = 0; i < n; i++) {
+        printf("Lançamento %d: ", i + 1);
+        if (scanf("%d", &face) != 1) {
+            printf("Entrada inválida. Saindo.\n");
+            return 1;
+        }
+        if (face >= 1 && face <= 6) {
+            contagem_faces[face - 1]++;
+        } else {
+            printf("Resultado inválido (%d) - ignorando. Use um número de 1 a 6.\n", face);
+        }
+    }
+
+    printf("\nContagem de cada face:\n");
+    for (i = 0; i < 6; i++) {
+        printf("Face %d: %d vezes\n", i + 1, contagem_faces[i]);
+    }
+
+    return 0;
+}

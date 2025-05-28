@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define MAX_FRASE 1024
+#define MAX_PALAVRA 256
+
+void remover_nova_linha(char *str) {
+    size_t len = strlen(str);
+    if (len > 0 && str[len - 1] == '\n') {
+        str[len - 1] = '\0';
+    }
+}
+
+int main() {
+    char frase[MAX_FRASE];
+    char palavra[MAX_PALAVRA];
+    int contagem = 0;
+    char *posicao_atual;
+
+    printf("Digite a frase: ");
+    if (fgets(frase, sizeof(frase), stdin) == NULL) {
+        fprintf(stderr, "Erro ao ler a frase.\n");
+        return 1;
+    }
+    remover_nova_linha(frase);
+
+    printf("Digite a palavra a ser contada: ");
+    if (fgets(palavra, sizeof(palavra), stdin) == NULL) {
+        fprintf(stderr, "Erro ao ler a palavra.\n");
+        return 1;
+    }
+    remover_nova_linha(palavra);
+
+    if (strlen(palavra) == 0) {
+        printf("A palavra de busca não pode estar vazia.\n");
+        return 1;
+    }
+
+    posicao_atual = frase;
+    while ((posicao_atual = strstr(posicao_atual, palavra)) != NULL) {
+        contagem++;
+        posicao_atual += strlen(palavra);
+    }
+
+    printf("\nA palavra '%s' aparece %d vez(es) na frase.\n", palavra, contagem);
+
+    return 0;
+}

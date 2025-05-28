@@ -1,0 +1,88 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+// Função de comparação para qsort
+int compara_doubles(const void *a, const void *b) {
+    double diff = (*(double*)a - *(double*)b);
+    if (diff < 0.0) return -1;
+    if (diff > 0.0) return 1;
+    return 0;
+}
+
+int main() {
+    double cx, cy;
+    int n;
+    double *raios;
+    double *raios_unicos;
+    int contador_unicos = 0;
+    int i, j;
+    const double EPSILON = 1e-9; // Pequena tolerância para comparação de doubles
+
+    printf("Digite as coordenadas do ponto central (x y): ");
+    if (scanf("%lf %lf", &cx, &cy) != 2) {
+        printf("Entrada inválida para o ponto central.\n");
+        return 1;
+    }
+
+    printf("Digite o número de pontos no plano (n): ");
+    if (scanf("%d", &n) != 1 || n < 0) {
+        printf("Número de pontos inválido.\n");
+        return 1;
+    }
+
+    if (n == 0) {
+        printf("Nenhum ponto fornecido para calcular raios.\n");
+        return 0;
+    }
+
+    raios = (double *)malloc(n * sizeof(double));
+    if (raios == NULL) {
+        printf("Erro: Falha ao alocar memória para raios!\n");
+        return 1;
+    }
+
+    printf("Digite as coordenadas dos %d pontos (x y) um por linha:\n", n);
+    for (i = 0; i < n; i++) {
+        double px, py;
+        printf("Ponto %d: ", i + 1);
+        if (scanf("%lf %lf", &px, &py) != 2) {
+            printf("Entrada inválida para o ponto %d.\n", i + 1);
+            free(raios);
+            return 1;
+        }
+        raios[i] = sqrt(pow(px - cx, 2) + pow(py - cy, 2));
+    }
+
+    qsort(raios, n, sizeof(double), compara_doubles);
+
+    raios_unicos = (double *)malloc(n * sizeof(double));
+    if (raios_unicos == NULL) {
+        printf("Erro: Falha ao alocar memória para raios únicos!\n");
+        free(raios);
+        return 1;
+    }
+
+    if (n > 0) {
+        raios_unicos[0] = raios[0];
+        contador_unicos = 1;
+        for (i = 1; i < n; i++) {
+            // Compara o raio atual com o último raio único adicionado
+            // fabs para valor absoluto da diferença, comparando com EPSILON
+            if (fabs(raios[i] - raios_unicos[contador_unicos - 1]) > EPSILON) {
+                raios_unicos[contador_unicos] = raios[i];
+                contador_unicos++;
+            }
+        }
+    }
+
+    printf("\nRaios das circunferências (sem repetição):\n");
+    for (i = 0; i < contador_unicos; i++) {
+        printf("%.2f\n", raios_unicos[i]);
+    }
+
+    free(raios);
+    free(raios_unicos);
+
+    return 0;
+}

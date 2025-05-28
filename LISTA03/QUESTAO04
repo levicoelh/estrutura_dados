@@ -1,0 +1,59 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int n;
+    int *x;
+    int *y;
+    long long produto_escalar = 0;
+    int i;
+
+    printf("Digite o número de elementos dos vetores (n): ");
+    if (scanf("%d", &n) != 1 || n <= 0) {
+        printf("Número de elementos inválido. Deve ser um inteiro positivo.\n");
+        return 1;
+    }
+
+    x = (int *)malloc(n * sizeof(int));
+    y = (int *)malloc(n * sizeof(int));
+
+    if (x == NULL || y == NULL) {
+        printf("Erro: Falha ao alocar memória!\n");
+        free(x);
+        free(y);
+        return 1;
+    }
+
+    printf("Digite os %d elementos do vetor x:\n", n);
+    for (i = 0; i < n; i++) {
+        printf("x[%d]: ", i);
+        if (scanf("%d", &x[i]) != 1) {
+            printf("Entrada inválida para o vetor x.\n");
+            free(x);
+            free(y);
+            return 1;
+        }
+    }
+
+    printf("Digite os %d elementos do vetor y:\n", n);
+    for (i = 0; i < n; i++) {
+        printf("y[%d]: ", i);
+        if (scanf("%d", &y[i]) != 1) {
+            printf("Entrada inválida para o vetor y.\n");
+            free(x);
+            free(y);
+            return 1;
+        }
+    }
+
+    for (i = 0; i < n; i++) {
+        produto_escalar += (long long)x[i] * y[i];
+    }
+
+    printf("\nO produto escalar dos vetores é: %lld\n", produto_escalar);
+
+    free(x);
+    free(y);
+
+    return 0;
+}

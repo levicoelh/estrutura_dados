@@ -1,0 +1,69 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+int main() {
+    int n_grau;
+    double *coeficientes;
+    int k_pontos;
+    double x_atual;
+    double valor_polinomio;
+    int i, j;
+
+    printf("Digite o grau do polinômio (n): ");
+    if (scanf("%d", &n_grau) != 1 || n_grau < 0) {
+        fprintf(stderr, "Grau do polinômio inválido.\n");
+        return 1;
+    }
+
+    coeficientes = (double *)malloc((n_grau + 1) * sizeof(double));
+    if (coeficientes == NULL) {
+        fprintf(stderr, "Erro: Falha ao alocar memória para os coeficientes!\n");
+        return 1;
+    }
+
+    printf("Digite os %d coeficientes do polinômio (a0 a %d), do menor para o maior grau:\n", n_grau + 1, n_grau);
+    for (i = 0; i <= n_grau; i++) {
+        printf("a%d: ", i);
+        if (scanf("%lf", &coeficientes[i]) != 1) {
+            fprintf(stderr, "Entrada inválida para o coeficiente a%d.\n", i);
+            free(coeficientes);
+            return 1;
+        }
+    }
+
+    printf("Digite o número de pontos distintos (k) para avaliação: ");
+    if (scanf("%d", &k_pontos) != 1 || k_pontos < 0) {
+        fprintf(stderr, "Número de pontos inválido.\n");
+        free(coeficientes);
+        return 1;
+    }
+
+    if (k_pontos == 0 && n_grau >=0) {
+         free(coeficientes);
+         return 0;
+    }
+     if (k_pontos == 0 && n_grau < 0) {
+         return 0;
+    }
+
+
+    printf("\nAvaliação do polinômio nos %d pontos:\n", k_pontos);
+    for (i = 0; i < k_pontos; i++) {
+        printf("Digite o valor do ponto x%d: ", i + 1);
+        if (scanf("%lf", &x_atual) != 1) {
+            fprintf(stderr, "Entrada inválida para o ponto x%d.\n", i + 1);
+            free(coeficientes);
+            return 1;
+        }
+
+        valor_polinomio = coeficientes[n_grau];
+        for (j = n_grau - 1; j >= 0; j--) {
+            valor_polinomio = valor_polinomio * x_atual + coeficientes[j];
+        }
+        printf("p(%.2f) = %.2f\n", x_atual, valor_polinomio);
+    }
+
+    free(coeficientes);
+    return 0;
+}
