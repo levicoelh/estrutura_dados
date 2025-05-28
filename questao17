@@ -1,0 +1,41 @@
+#include <stdio.h>
+
+void uniao_vetores(int vetor1[], int tamanho1, int vetor2[], int tamanho2, int resultado[], int *tamanho_resultado) {
+    int i, j, k = 0;
+
+    // Copia os elementos do primeiro vetor
+    for (i = 0; i < tamanho1; i++) {
+        resultado[k++] = vetor1[i];
+    }
+
+    // Adiciona elementos do segundo vetor se não estiverem no primeiro
+    for (i = 0; i < tamanho2; i++) {
+        int encontrado = 0;
+        for (j = 0; j < tamanho1; j++) {
+            if (vetor2[i] == vetor1[j]) {
+                encontrado = 1;
+                break;
+            }
+        }
+        if (!encontrado) {
+            resultado[k++] = vetor2[i];
+        }
+    }
+    *tamanho_resultado = k;
+}
+
+// Exemplo de uso
+int main() {
+    int vetor1[] = {1, 2, 3};
+    int vetor2[] = {3, 4, 5};
+    int resultado[10];
+    int tamanho_resultado;
+
+    uniao_vetores(vetor1, 3, vetor2, 3, resultado, &tamanho_resultado);
+
+    for (int i = 0; i < tamanho_resultado; i++) {
+        printf("%d ", resultado[i]);
+    }
+    printf("\n");
+    return 0;
+}
