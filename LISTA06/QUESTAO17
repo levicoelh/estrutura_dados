@@ -1,0 +1,231 @@
+#include <stdio.h>
+#include <stdlib.h> // Para malloc, realloc, free, perror
+#include <stdbool.h> // Para o tipo bool e valores true/false
+
+// Define uma capacidade inicial padrão se nenhuma for especificada ou se for inválida
+#define CAPACIDADE_INICIAL_PADRAO 8
+
+// 1. Definição da struct VetorDinamico
+typedef struct {
+    int *dados;      // Ponteiro para os elementos do vetor
+    int tamanho;     // Número atual de elementos
+    int capacidade;  // Capacidade total de armazenamento atual
+} VetorDinamico;
+
+// --- Funções Auxiliares e de Gerenciamento ---
+
+/**
+ * @brief Inicializa um VetorDinamico com uma capacidade inicial.
+ *
+ * @param vetor Ponteiro para a struct VetorDinamico a ser inicializada.
+ * @param capacidadeInicial A capacidade inicial desejada para o vetor.
+ * Se <= 0, o vetor será inicializado com capacidade 0 e dados NULL.
+ * @return true se a inicialização for bem-sucedida, false caso contrário (ex: falha de alocação).
+ */
+bool inicializarVetor(VetorDinamico *vetor, int capacidadeInicial) {
+    if (vetor == NULL) {
+        fprintf(stderr, "Erro: Ponteiro para VetorDinamico é nulo na inicialização.\n");
+        return false;
+    }
+
+    vetor->tamanho = 0; // Um novo vetor sempre começa vazio
+
+    if (capacidadeInicial <= 0) {
+        vetor->dados = NULL; // Sem alocação inicial se capacidade for 0 ou negativa
+        vetor->capacidade = 0;
+        return true; // Inicializado com sucesso como um vetor vazio e sem capacidade
+    }
+
+    vetor->dados = (int *)malloc(capacidadeInicial * sizeof(int));
+    if (vetor->dados == NULL) {
+        vetor->capacidade = 0; // malloc falhou
+        perror("Falha ao alocar memória inicial para VetorDinamico");
+        return false;
+    }
+    vetor->capacidade = capacidadeInicial;
+    return true;
+}
+
+/**
+ * @brief Libera a memória alocada para os dados do VetorDinamico.
+ * Zera o tamanho e a capacidade e define o ponteiro de dados para NULL.
+ *
+ * @param vetor Ponteiro para a struct VetorDinamico a ser liberada.
+ */
+void liberarVetor(VetorDinamico *vetor) {
+    if (vetor != NULL) {
+        free(vetor->dados);      // Libera o array de dados
+        vetor->dados = NULL;     // Evita "dangling pointer"
+        vetor->tamanho = 0;
+        vetor->capacidade = 0;
+    }
+}
+
+/**
+ * @brief Imprime o conteúdo, tamanho e capacidade do VetorDinamico.
+ *
+ * @param vetor Ponteiro (const) para a struct VetorDinamico a ser impressa.
+ */
+void imprimirVetorDinamico(const VetorDinamico *vetor) {
+    if (vetor == NULL) {
+        printf("VetorDinamico: [PONTEIRO NULO PARA O VETOR]\n");
+        return;
+    }
+
+    printf("VetorDinamico: ");
+    if (vetor->tamanho == 0) {
+        printf("[ ] (vazio)");
+    } else {
+        printf("[ ");
+        for (int i = 0; i < vetor->tamanho; i++) {
+            printf("%d ", vetor->dados[i]);
+        }
+        printf("]");
+    }
+    printf(" (Tamanho: %d, Capacidade: %d)\n", vetor->tamanho, vetor->capacidade);
+}
+
+// --- Funções para Adicionar e Remover Elementos ---
+
+/**
+ * @brief Adiciona um elemento ao final do VetorDinamico.
+ * Se necessário, a capacidade do vetor é aumentada (geralmente dobrada).
+ *
+ * @param vetor Ponteiro para a struct VetorDinamico.
+ * @param elemento O valor inteiro a ser adicionado.
+ * @return true se o elemento foi adicionado com sucesso, false caso contrário (ex: falha de realocação).
+ */
+bool adicionarElemento(VetorDinamico *vetor, int elemento) {
+    if (vetor == NULL) {
+        fprintf(stderr, "Erro: Ponteiro para VetorDinamico é nulo ao adicionar.\n");
+        return false;
+    }
+
+    // Verifica se é necessário aumentar a capacidade
+    if (vetor->tamanho >= vetor->capacidade) {
+        // Define nova capacidade: dobra a atual ou usa a padrão se a capacidade for 0
+        int novaCapacidade = (vetor->capacidade == 0) ? CAPACIDADE_INICIAL_PADRAO : vetor->capacidade * 2;
+        
+        // Tenta realocar memória para a nova capacidade
+        int *novosDados = (int *)realloc(vetor->dados, novaCapacidade * sizeof(int));
+        if (novosDados == NULL) {
+            perror("Falha ao redimensionar VetorDinamico (realloc)");
+            // O vetor original (vetor->dados) ainda é válido e contém os dados antigos
+            return false; // Falha na realocação
+        }
+        vetor->dados = novosDados;
+        vetor->capacidade = novaCapacidade;
+    }
+
+    // Adiciona o elemento na próxima posição disponível e incrementa o tamanho
+    vetor->dados[vetor->tamanho] = elemento;
+    vetor->tamanho++;
+    return true;
+}
+
+/**
+ * @brief Remove um elemento de um índice específico do VetorDinamico.
+ * Os elementos à direita do índice removido são deslocados para a esquerda.
+ *
+ * @param vetor Ponteiro para a struct VetorDinamico.
+ * @param indice O índice do elemento a ser removido.
+ * @return true se o elemento foi removido com sucesso, false se o índice for inválido.
+ */
+bool removerElementoPorIndice(VetorDinamico *vetor, int indice) {
+    if (vetor == NULL) {
+        fprintf(stderr, "Erro: Ponteiro para VetorDinamico é nulo ao remover.\n");
+        return false;
+    }
+    // Valida o índice
+    if (indice < 0 || indice >= vetor->tamanho) {
+        fprintf(stderr, "Erro: Índice inválido (%d) para remoção. Tamanho atual: %d.\n", indice, vetor->tamanho);
+        return false;
+    }
+
+    // Desloca os elementos à direita do índice para a esquerda para preencher o espaço
+    for (int i = indice; i < vetor->tamanho - 1; i++) {
+        vetor->dados[i] = vetor->dados[i + 1];
+    }
+
+    // Decrementa o tamanho do vetor
+    vetor->tamanho--;
+
+    // Opcional: Poderia-se adicionar lógica para reduzir a capacidade se
+    // o tamanho ficar muito menor que a capacidade (ex: tamanho < capacidade / 4),
+    // mas isso adiciona complexidade e não será implementado aqui para simplificar.
+
+    return true;
+}
+
+
+// --- Função Principal para Demonstração ---
+int main() {
+    VetorDinamico meuVetor;
+
+    printf("Inicializando vetor com capacidade 0 (crescerá ao adicionar)...\n");
+    if (!inicializarVetor(&meuVetor, 0)) { // Começa com capacidade 0, dados = NULL
+        return 1; // Falha na inicialização
+    }
+    imprimirVetorDinamico(&meuVetor);
+
+    printf("\nAdicionando elementos:\n");
+    for (int i = 1; i <= 5; i++) {
+        printf("Adicionando %d: ", i * 10);
+        if (adicionarElemento(&meuVetor, i * 10)) {
+            printf("Sucesso. ");
+            imprimirVetorDinamico(&meuVetor);
+        } else {
+            printf("Falha ao adicionar %d.\n", i * 10);
+        }
+    }
+    // A capacidade deve ter aumentado, provavelmente para CAPACIDADE_INICIAL_PADRAO (8 se for o caso)
+
+    printf("\nAdicionando mais elementos para forçar realocação (se CAPACIDADE_INICIAL_PADRAO foi 8):\n");
+    for (int i = 6; i <= 10; i++) { // Adiciona mais 5 elementos
+        printf("Adicionando %d: ", i * 10);
+        if (adicionarElemento(&meuVetor, i * 10)) {
+            printf("Sucesso. ");
+            imprimirVetorDinamico(&meuVetor);
+        } else {
+            printf("Falha ao adicionar %d.\n", i * 10);
+        }
+    }
+    // A capacidade deve ter dobrado (ex: de 8 para 16)
+
+    printf("\nRemovendo elemento no índice 2 (valor %d):\n", meuVetor.dados[2]);
+    if (removerElementoPorIndice(&meuVetor, 2)) {
+        printf("Sucesso. ");
+        imprimirVetorDinamico(&meuVetor);
+    } else {
+        printf("Falha ao remover no índice 2.\n");
+    }
+    
+
+    printf("\nRemovendo elemento no índice 0 (valor %d):\n", meuVetor.dados[0]);
+    if (removerElementoPorIndice(&meuVetor, 0)) {
+        printf("Sucesso. ");
+        imprimirVetorDinamico(&meuVetor);
+    } else {
+        printf("Falha ao remover no índice 0.\n");
+    }
+
+    printf("\nRemovendo elemento no último índice atual (%d) (valor %d):\n", meuVetor.tamanho -1, meuVetor.dados[meuVetor.tamanho - 1] );
+    if (removerElementoPorIndice(&meuVetor, meuVetor.tamanho - 1)) {
+         printf("Sucesso. ");
+        imprimirVetorDinamico(&meuVetor);
+    } else {
+        printf("Falha ao remover no último índice.\n");
+    }
+
+    printf("\nTentando remover de índice inválido (ex: 100):\n");
+    if (!removerElementoPorIndice(&meuVetor, 100)) {
+        // A função removerElementoPorIndice já imprime a mensagem de erro.
+        imprimirVetorDinamico(&meuVetor); // Mostra que o vetor não mudou
+    }
+
+    printf("\nLiberando o vetor...\n");
+    liberarVetor(&meuVetor);
+    imprimirVetorDinamico(&meuVetor); // Deve mostrar que está vazio e sem capacidade
+
+    return 0;
+}

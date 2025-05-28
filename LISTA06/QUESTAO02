@@ -1,0 +1,54 @@
+#include <stdio.h> // Para printf
+
+/**
+ * @brief Encontra o maior e o menor valor em um vetor de números reais.
+ *
+ * @param vetor O vetor de números reais (tipo float).
+ * @param tamanho O número de elementos no vetor.
+ * @param maior Ponteiro para a variável que armazenará o maior valor encontrado.
+ * @param menor Ponteiro para a variável que armazenará o menor valor encontrado.
+ */
+void encontrarMaiorMenor(float vetor[], int tamanho, float *maior, float *menor) {
+    // Verifica se o vetor é válido e tem elementos
+    if (vetor == NULL || tamanho <= 0) {
+        printf("Erro: Vetor inválido ou vazio.\n");
+        if (maior != NULL) *maior = 0.0f;
+        if (menor != NULL) *menor = 0.0f;
+        return;
+    }
+
+    // Inicializa 'maior' e 'menor' com o primeiro elemento do vetor
+    *maior = vetor[0];
+    *menor = vetor[0];
+
+    // Percorre o restante do vetor para encontrar o maior e o menor
+    for (int i = 1; i < tamanho; i++) {
+        if (vetor[i] > *maior) {
+            *maior = vetor[i];
+        }
+        if (vetor[i] < *menor) {
+            *menor = vetor[i];
+        }
+    }
+}
+
+int main() {
+    float meusNumeros[] = {3.14f, -0.5f, 2.71f, 100.0f, -25.5f, 0.0f, 7.77f};
+    int quantidade = sizeof(meusNumeros) / sizeof(meusNumeros[0]);
+    float valorMaximo, valorMinimo;
+
+    printf("Vetor de números (C): ");
+    for (int i = 0; i < quantidade; i++) {
+        printf("%.2f ", meusNumeros[i]);
+    }
+    printf("\n");
+
+    encontrarMaiorMenor(meusNumeros, quantidade, &valorMaximo, &valorMinimo);
+
+    if (quantidade > 0) {
+        printf("Maior valor no vetor: %.2f\n", valorMaximo);
+        printf("Menor valor no vetor: %.2f\n", valorMinimo);
+    }
+
+    return 0;
+}

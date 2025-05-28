@@ -1,0 +1,141 @@
+#include <stdio.h>
+#include <stdlib.h> // Para malloc, calloc, free, perror
+
+/**
+ * @brief Aloca dinamicamente uma matriz (ponteiro para ponteiro) e a inicializa com zeros.
+ *
+ * @param linhas O número de linhas da matriz.
+ * @param colunas O número de colunas da matriz.
+ * @return Um ponteiro para a matriz alocada (int**) ou NULL em caso de falha na alocação
+ * ou se as dimensões forem inválidas.
+ */
+int** alocarMatrizDinamica(int linhas, int colunas) {
+    // Verifica se as dimensões são válidas
+    if (linhas <= 0 || colunas <= 0) {
+        fprintf(stderr, "Erro: Dimensões da matriz devem ser positivas.\n");
+        return NULL;
+    }
+
+    // 1. Alocar memória para o array de ponteiros de linha (um ponteiro para cada linha)
+    int **matriz = (int **)malloc(linhas * sizeof(int *));
+    if (matriz == NULL) {
+        perror("Falha ao alocar ponteiros de linha para a matriz");
+        return NULL; // Falha na alocação
+    }
+
+    // 2. Para cada ponteiro de linha, alocar memória para os elementos da linha (colunas)
+    // Usaremos calloc aqui, pois ele já inicializa a memória com zeros.
+    for (int i = 0; i < linhas; i++) {
+        matriz[i] = (int *)calloc(colunas, sizeof(int));
+        if (matriz[i] == NULL) {
+            perror("Falha ao alocar colunas para a linha e inicializar com zeros");
+            // Se a alocação de uma linha falhar, precisamos liberar a memória já alocada
+            // para as linhas anteriores e para o array de ponteiros de linha.
+            for (int k = 0; k < i; k++) {
+                free(matriz[k]); // Libera as linhas que foram alocadas com sucesso
+            }
+            free(matriz); // Libera o array de ponteiros de linha
+            return NULL;  // Retorna NULL indicando falha geral
+        }
+        // Se calloc foi usado, a inicialização com zeros já está feita.
+        // Se fosse malloc, precisaríamos de um loop aqui:
+        // for (int j = 0; j < colunas; j++) {
+        //     matriz[i][j] = 0;
+        // }
+    }
+
+    return matriz; // Retorna o ponteiro para a matriz alocada e inicializada
+}
+
+/**
+ * @brief Libera a memória alocada para uma matriz dinâmica.
+ *
+ * @param matriz O ponteiro para a matriz (int**) a ser liberada.
+ * @param linhas O número de linhas que a matriz tinha quando foi alocada.
+ * Necessário para liberar cada ponteiro de linha.
+ */
+void liberarMatrizDinamica(int **matriz, int linhas) {
+    if (matriz == NULL) {
+        return; // Nada a liberar se a matriz for NULL
+    }
+
+    // Libera a memória de cada linha primeiro
+    // É seguro assumir que se 'matriz' não é NULL e 'linhas' > 0,
+    // as linhas foram alocadas (ou a alocação teria falhado e retornado NULL).
+    // O loop não executará se linhas <= 0.
+    for (int i = 0; i < linhas; i++) {
+        free(matriz[i]); // free(NULL) é seguro, mas matriz[i] não deve ser NULL aqui se alocada corretamente.
+    }
+
+    // Finalmente, libera o array de ponteiros de linha
+    free(matriz);
+}
+
+/**
+ * @brief Imprime o conteúdo de uma matriz alocada dinamicamente.
+ *
+ * @param matriz O ponteiro para a matriz (int**).
+ * @param linhas O número de linhas da matriz.
+ * @param colunas O número de colunas da matriz.
+ */
+void imprimirMatrizDinamica(int **matriz, int linhas, int colunas) {
+    if (matriz == NULL) {
+        printf("Matriz é NULA, não pode ser impressa.\n");
+        return;
+    }
+    if (linhas <= 0 || colunas <= 0) {
+        printf("Dimensões inválidas para impressão da matriz.\n");
+        return;
+    }
+
+    printf("Conteúdo da Matriz Dinâmica (%dx%d):\n", linhas, colunas);
+    for (int i = 0; i < linhas; i++) {
+        // Uma verificação extra, embora não deva ocorrer se alocarMatrizDinamica funcionou
+        if (matriz[i] == NULL) {
+            printf("[ Linha %d não alocada ou NULA ]\n", i);
+            continue;
+        }
+        printf("[ ");
+        for (int j = 0; j < colunas; j++) {
+            printf("%3d ", matriz[i][j]); // Imprime cada elemento
+        }
+        printf("]\n");
+    }
+    printf("\n");
+}
+
+// Função principal para demonstrar o uso
+int main() {
+    int numLinhas = 3;
+    int numColunas = 4;
+    int **minhaMatriz;
+
+    printf("Tentando alocar uma matriz dinâmica de %dx%d...\n", numLinhas, numColunas);
+    minhaMatriz = alocarMatrizDinamica(numLinhas, numColunas);
+
+    if (minhaMatriz != NULL) {
+        printf("Matriz alocada e inicializada com sucesso!\n");
+        imprimirMatrizDinamica(minhaMatriz, numLinhas, numColunas);
+
+        // Exemplo de como modificar um valor (opcional)
+        // minhaMatriz[1][2] = 5;
+        // printf("Matriz após modificar um elemento:\n");
+        // imprimirMatrizDinamica(minhaMatriz, numLinhas, numColunas);
+
+        printf("Liberando a memória da matriz dinâmica...\n");
+        liberarMatrizDinamica(minhaMatriz, numLinhas);
+        minhaMatriz = NULL; // Boa prática: definir ponteiro para NULL após liberar
+        printf("Memória liberada.\n");
+    } else {
+        printf("Falha ao alocar a matriz dinâmica.\n");
+    }
+
+    printf("\nTentando alocar matriz com dimensões inválidas (0 linhas):\n");
+    int **matrizInvalida = alocarMatrizDinamica(0, 5);
+    if (matrizInvalida == NULL) {
+        printf("Corretamente retornou NULL para dimensões inválidas.\n");
+    }
+    // Não há necessidade de liberar matrizInvalida pois é NULL
+
+    return 0;
+}

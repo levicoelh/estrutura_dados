@@ -1,0 +1,106 @@
+#include <stdio.h>
+
+/**
+ * @brief Busca um elemento em um vetor de inteiros usando busca sequencial.
+ *
+ * @param vetor O array de inteiros onde a busca será realizada.
+ * @param tamanho O número de elementos no vetor.
+ * @param elemento_buscado O valor inteiro a ser procurado no vetor.
+ * @return A posição (índice) do elemento no vetor se encontrado;
+ * -1 caso contrário.
+ */
+int buscaSequencial(int vetor[], int tamanho, int elemento_buscado) {
+    for (int i = 0; i < tamanho; i++) {
+        if (vetor[i] == elemento_buscado) {
+            return i; // Retorna o índice onde o elemento foi encontrado
+        }
+    }
+    return -1; // Retorna -1 se o elemento não foi encontrado após percorrer todo o vetor
+}
+
+int main() {
+    // Exemplo 1: Elemento presente no vetor
+    int numeros1[] = {10, 25, 5, 42, 17, 8, 30};
+    int tamanho1 = sizeof(numeros1) / sizeof(numeros1[0]);
+    int buscar1 = 42;
+    int posicao1 = buscaSequencial(numeros1, tamanho1, buscar1);
+
+    if (posicao1 != -1) {
+        printf("Elemento %d encontrado na posição %d do vetor1.\n", buscar1, posicao1);
+        // Saída esperada: Elemento 42 encontrado na posição 3 do vetor1.
+    } else {
+        printf("Elemento %d não encontrado no vetor1.\n", buscar1);
+    }
+
+    // Exemplo 2: Elemento não presente no vetor
+    int buscar2 = 99;
+    int posicao2 = buscaSequencial(numeros1, tamanho1, buscar2);
+
+    if (posicao2 != -1) {
+        printf("Elemento %d encontrado na posição %d do vetor1.\n", buscar2, posicao2);
+    } else {
+        printf("Elemento %d não encontrado no vetor1.\n", buscar2);
+        // Saída esperada: Elemento 99 não encontrado no vetor1.
+    }
+
+    // Exemplo 3: Busca em um vetor vazio
+    int numeros_vazio[] = {};
+    int tamanho_vazio = 0; // sizeof(numeros_vazio) / sizeof(int) pode dar 0, mas é mais explícito assim.
+                           // Ou, se numeros_vazio fosse um ponteiro, tamanho_vazio seria crucial.
+    int buscar3 = 5;
+    int posicao3 = buscaSequencial(numeros_vazio, tamanho_vazio, buscar3);
+
+    if (posicao3 != -1) {
+        printf("Elemento %d encontrado na posição %d do vetor_vazio.\n", buscar3, posicao3);
+    } else {
+        printf("Elemento %d não encontrado no vetor_vazio.\n", buscar3);
+        // Saída esperada: Elemento 5 não encontrado no vetor_vazio.
+    }
+
+    // Exemplo 4: Elemento presente no início do vetor
+    int buscar4 = 10;
+    int posicao4 = buscaSequencial(numeros1, tamanho1, buscar4);
+
+    if (posicao4 != -1) {
+        printf("Elemento %d encontrado na posição %d do vetor1.\n", buscar4, posicao4);
+        // Saída esperada: Elemento 10 encontrado na posição 0 do vetor1.
+    } else {
+        printf("Elemento %d não encontrado no vetor1.\n", buscar4);
+    }
+
+    // Exemplo 5: Elemento presente no fim do vetor
+    int buscar5 = 30;
+    int posicao5 = buscaSequencial(numeros1, tamanho1, buscar5);
+
+    if (posicao5 != -1) {
+        printf("Elemento %d encontrado na posição %d do vetor1.\n", buscar5, posicao5);
+        // Saída esperada: Elemento 30 encontrado na posição 6 do vetor1.
+    } else {
+        printf("Elemento %d não encontrado no vetor1.\n", buscar5);
+    }
+    
+    // Exemplo 6: Vetor com um único elemento (encontrado)
+    int numeros6[] = {100};
+    int tamanho6 = sizeof(numeros6) / sizeof(numeros6[0]);
+    int buscar6 = 100;
+    int posicao6 = buscaSequencial(numeros6, tamanho6, buscar6);
+    if (posicao6 != -1) {
+        printf("Elemento %d encontrado na posição %d do vetor6.\n", buscar6, posicao6);
+        // Saída esperada: Elemento 100 encontrado na posição 0 do vetor6.
+    } else {
+        printf("Elemento %d não encontrado no vetor6.\n", buscar6);
+    }
+
+    // Exemplo 7: Vetor com um único elemento (não encontrado)
+    int buscar7 = 200;
+    int posicao7 = buscaSequencial(numeros6, tamanho6, buscar7);
+    if (posicao7 != -1) {
+        printf("Elemento %d encontrado na posição %d do vetor6.\n", buscar7, posicao7);
+    } else {
+        printf("Elemento %d não encontrado no vetor6.\n", buscar7);
+        // Saída esperada: Elemento 200 não encontrado no vetor6.
+    }
+
+
+    return 0;
+}

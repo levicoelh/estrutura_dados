@@ -1,0 +1,45 @@
+#include <stdio.h>
+
+// Função para calcular a soma dos elementos de um vetor de inteiros
+int somaElementos(int vetor[], int tamanho) {
+    int soma = 0;
+    for (int i = 0; i < tamanho; i++) {
+        soma += vetor[i];
+    }
+    return soma;
+}
+
+int main() {
+    // Exemplo de uso
+    int numeros1[] = {1, 2, 3, 4, 5};
+    int tamanho1 = sizeof(numeros1) / sizeof(numeros1[0]); // Calcula o número de elementos no array
+    int resultado1 = somaElementos(numeros1, tamanho1);
+    printf("A soma de numeros1 é: %d\n", resultado1); // Saída: A soma de numeros1 é: 15
+
+    int numeros2[] = {10, -2, 7, 0, 15};
+    int tamanho2 = sizeof(numeros2) / sizeof(numeros2[0]);
+    int resultado2 = somaElementos(numeros2, tamanho2);
+    printf("A soma de numeros2 é: %d\n", resultado2); // Saída: A soma de numeros2 é: 30
+
+    int numeros3[] = {}; // Vetor vazio (ou pode ser NULL com tamanho 0)
+    int tamanho3 = sizeof(numeros3) / sizeof(numeros3[0]); // Em C, um array vazio declarado assim ainda pode ter tamanho 0.
+                                                         // Se declarado como ponteiro e não alocado, deve ser tratado com cuidado.
+    if (tamanho3 == 0 && sizeof(numeros3) == 0) { // Checagem mais robusta para arrays realmente vazios na declaração.
+        // Em algumas compilações `sizeof(numeros3)` pode não ser 0 para `int numeros3[] = {};`
+        // Uma forma mais segura para "vetores vazios" seria passar um ponteiro NULL e tamanho 0.
+        printf("A soma de numeros3 (vetor vazio) é: 0\n");
+    } else {
+        // Se o array não for realmente vazio ou se a intenção for testar um array com 0 elementos mas alocado:
+        int resultado3 = somaElementos(numeros3, tamanho3);
+        printf("A soma de numeros3 é: %d\n", resultado3); // Saída (para `int numeros3[] = {};`): A soma de numeros3 é: 0
+    }
+
+    // Exemplo com ponteiro NULL e tamanho 0 (forma mais comum de representar "ausência" de vetor)
+    int *numeros4 = NULL;
+    int tamanho4 = 0;
+    int resultado4 = somaElementos(numeros4, tamanho4);
+    printf("A soma de numeros4 (ponteiro NULL, tamanho 0) é: %d\n", resultado4); // Saída: A soma de numeros4 (ponteiro NULL, tamanho 0) é: 0
+
+
+    return 0;
+}

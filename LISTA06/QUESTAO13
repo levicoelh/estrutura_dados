@@ -1,0 +1,140 @@
+#include <stdio.h>
+#include <string.h> // Para snprintf ou strcpy, se usados na inicialização em main
+#include <stdlib.h> // Para qsort, se fosse a escolha (não usado na implementação principal aqui)
+
+// Define um tamanho máximo para o nome do produto
+#define MAX_NOME_PRODUTO 100
+
+// 1. Definição da struct Produto
+struct Produto {
+    char nome[MAX_NOME_PRODUTO];
+    float preco;
+};
+
+// 2. Função auxiliar para imprimir os dados de um Produto
+void imprimirUmProduto(const struct Produto *p) {
+    if (p == NULL) {
+        printf("Erro: Produto nulo.\n");
+        return;
+    }
+    // %-30s alinha o nome à esquerda, ocupando 30 caracteres de espaço
+    printf("  Nome: %-30s | Preço: R$ %.2f\n", p->nome, p->preco);
+}
+
+// Função auxiliar para imprimir uma lista de Produtos
+void imprimirListaDeProdutos(const struct Produto vetorProdutos[], int numProdutos) {
+    if (numProdutos <= 0) {
+        printf("Nenhum produto para exibir.\n\n");
+        return;
+    }
+    printf("Lista de Produtos (%d itens):\n", numProdutos);
+    printf("--------------------------------------------------------\n");
+    for (int i = 0; i < numProdutos; i++) {
+        imprimirUmProduto(&vetorProdutos[i]);
+    }
+    printf("--------------------------------------------------------\n\n");
+}
+
+
+// 3. Função para ordenar um vetor de struct Produto pelo preço (usando Bubble Sort)
+/**
+ * @brief Ordena um vetor de struct Produto pelo campo 'preco' em ordem crescente.
+ * Utiliza o algoritmo Bubble Sort. A ordenação é feita "in-place".
+ *
+ * @param vetorProdutos Array de structs Produto a ser ordenado.
+ * @param numProdutos O número de produtos no array.
+ */
+void ordenarProdutosPorPreco(struct Produto vetorProdutos[], int numProdutos) {
+    // Se houver 0 ou 1 produto, o vetor já está "ordenado"
+    if (numProdutos <= 1) {
+        return;
+    }
+
+    struct Produto temp; // Variável temporária para a troca
+    bool trocou; // Flag para otimizar o Bubble Sort
+
+    for (int i = 0; i < numProdutos - 1; i++) {
+        trocou = false; // Assume que não haverá trocas nesta passagem
+        // A cada passagem 'i', o i-ésimo maior elemento "borbulha" para sua posição final.
+        // Por isso, o loop interno vai até 'numProdutos - 1 - i'.
+        for (int j = 0; j < numProdutos - 1 - i; j++) {
+            // Compara o preço do produto atual com o do próximo
+            if (vetorProdutos[j].preco > vetorProdutos[j + 1].preco) {
+                // Troca os produtos de posição
+                temp = vetorProdutos[j];
+                vetorProdutos[j] = vetorProdutos[j + 1];
+                vetorProdutos[j + 1] = temp;
+                trocou = true; // Indica que uma troca ocorreu
+            }
+        }
+        // Se nenhuma troca ocorreu na passagem interna, o vetor já está ordenado
+        if (!trocou) {
+            break;
+        }
+    }
+}
+
+// Função principal para demonstrar o uso
+int main() {
+    printf("--- Ordenação de Produtos por Preço ---\n\n");
+
+    // Criando um vetor de produtos
+    struct Produto catalogo[] = {
+        {"Laptop Gamer XZ", 7500.99f},
+        {"Mouse Sem Fio", 89.90f},
+        {"Teclado Mecanico RGB", 350.00f},
+        {"Monitor Ultrawide 34p", 2200.50f},
+        {"Cadeira Gamer Confort", 1200.00f},
+        {"Headset Pro 7.1", 250.75f},
+        {"SSD NVMe 1TB", 450.00f}
+    };
+    // Calcula o número de produtos no catálogo
+    int numItens = sizeof(catalogo) / sizeof(catalogo[0]);
+
+    printf("Catálogo ANTES da ordenação:\n");
+    imprimirListaDeProdutos(catalogo, numItens);
+
+    // Ordenando os produtos pelo preço
+    ordenarProdutosPorPreco(catalogo, numItens);
+
+    printf("Catálogo APÓS a ordenação por preço (ascendente):\n");
+    imprimirListaDeProdutos(catalogo, numItens);
+
+    // Teste com um vetor pequeno e um item já ordenado (para verificar a otimização do bubble sort)
+    printf("--- Teste com vetor pequeno ---\n\n");
+    struct Produto poucosProdutos[] = {
+        {"Produto Barato", 10.0f},
+        {"Produto Médio", 50.0f},
+        {"Produto Caro", 100.0f}
+    };
+    int numPoucos = sizeof(poucosProdutos) / sizeof(poucosProdutos[0]);
+    printf("Poucos produtos ANTES (já ordenado):\n");
+    imprimirListaDeProdutos(poucosProdutos, numPoucos);
+    ordenarProdutosPorPreco(poucosProdutos, numPoucos);
+    printf("Poucos produtos APÓS (deve permanecer igual e ser rápido):\n");
+    imprimirListaDeProdutos(poucosProdutos, numPoucos);
+
+    // Teste com vetor vazio
+    printf("--- Teste com vetor vazio ---\n\n");
+    struct Produto nenhumProduto[1]; // Array formal existe, mas numNenhum será 0
+    int numNenhum = 0;
+    printf("Nenhum produto ANTES:\n");
+    imprimirListaDeProdutos(nenhumProduto, numNenhum);
+    ordenarProdutosPorPreco(nenhumProduto, numNenhum);
+    printf("Nenhum produto APÓS:\n");
+    imprimirListaDeProdutos(nenhumProduto, numNenhum);
+    
+    // Teste com vetor de um único produto
+    printf("--- Teste com vetor de um produto ---\n\n");
+    struct Produto umProduto[] = {
+        {"Item Único", 99.99f}
+    };
+    int numUm = sizeof(umProduto) / sizeof(umProduto[0]);
+    printf("Um produto ANTES:\n");
+    imprimirListaDeProdutos(umProduto, numUm);
+    ordenarProdutosPorPreco(umProduto, numUm);
+    printf("Um produto APÓS:\n");
+    imprimirListaDeProdutos(umProduto, numUm);
+
+    return 0;
+}

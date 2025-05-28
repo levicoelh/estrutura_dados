@@ -1,0 +1,146 @@
+#include <stdio.h>
+#include <stdbool.h> // Para usar o tipo bool, true, false (opcional, pode-se usar int 0 e 1)
+
+// Função para imprimir uma matriz (opcional, para demonstração)
+// (Reutilizada de exemplos anteriores)
+void imprimirMatriz(int linhas, int colunas, int matriz[linhas][colunas]) {
+    printf("Matriz (%dx%d):\n", linhas, colunas);
+    for (int i = 0; i < linhas; i++) {
+        printf("[ ");
+        for (int j = 0; j < colunas; j++) {
+            printf("%3d ", matriz[i][j]);
+        }
+        printf("]\n");
+    }
+    printf("\n");
+}
+
+/**
+ * @brief Verifica se uma matriz quadrada é uma matriz identidade.
+ *
+ * Uma matriz identidade tem 1s na diagonal principal e 0s em todas as outras posições.
+ *
+ * @param n A dimensão da matriz quadrada (número de linhas ou colunas).
+ * @param matriz A matriz quadrada de entrada. Deve ter dimensões n x n.
+ * @return true (ou 1) se a matriz for identidade, false (ou 0) caso contrário.
+ */
+bool ehMatrizIdentidade(int n, int matriz[n][n]) {
+    // Matrizes com dimensão 0 ou negativa não são consideradas identidade neste contexto.
+    // Uma matriz 1x1 identidade deve ser {{1}}.
+    if (n <= 0) {
+        return false;
+    }
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            // Verifica elementos da diagonal principal
+            if (i == j) {
+                if (matriz[i][j] != 1) {
+                    return false; // Elemento da diagonal principal diferente de 1
+                }
+            }
+            // Verifica elementos fora da diagonal principal
+            else {
+                if (matriz[i][j] != 0) {
+                    return false; // Elemento fora da diagonal principal diferente de 0
+                }
+            }
+        }
+    }
+
+    // Se todos os elementos passaram nas verificações, é uma matriz identidade
+    return true;
+}
+
+int main() {
+    printf("--- Verificação de Matriz Identidade ---\n\n");
+
+    // Exemplo 1: Matriz Identidade 3x3
+    int n1 = 3;
+    int id1[n1][n1] = {
+        {1, 0, 0},
+        {0, 1, 0},
+        {0, 0, 1}
+    };
+    printf("Matriz 1:\n");
+    imprimirMatriz(n1, n1, id1);
+    if (ehMatrizIdentidade(n1, id1)) {
+        printf("Matriz 1 É uma matriz identidade.\n\n");
+    } else {
+        printf("Matriz 1 NÃO é uma matriz identidade.\n\n");
+    }
+    // Saída Esperada: É uma matriz identidade.
+
+    // Exemplo 2: Matriz Não Identidade (diagonal errada) 3x3
+    int n2 = 3;
+    int non_id2[n2][n2] = {
+        {1, 0, 0},
+        {0, 5, 0}, // Elemento da diagonal diferente de 1
+        {0, 0, 1}
+    };
+    printf("Matriz 2:\n");
+    imprimirMatriz(n2, n2, non_id2);
+    if (ehMatrizIdentidade(n2, non_id2)) {
+        printf("Matriz 2 É uma matriz identidade.\n\n");
+    } else {
+        printf("Matriz 2 NÃO é uma matriz identidade.\n\n");
+    }
+    // Saída Esperada: NÃO é uma matriz identidade.
+
+    // Exemplo 3: Matriz Não Identidade (fora da diagonal errada) 3x3
+    int n3 = 3;
+    int non_id3[n3][n3] = {
+        {1, 0, 0},
+        {0, 1, 7}, // Elemento fora da diagonal diferente de 0
+        {0, 0, 1}
+    };
+    printf("Matriz 3:\n");
+    imprimirMatriz(n3, n3, non_id3);
+    if (ehMatrizIdentidade(n3, non_id3)) {
+        printf("Matriz 3 É uma matriz identidade.\n\n");
+    } else {
+        printf("Matriz 3 NÃO é uma matriz identidade.\n\n");
+    }
+    // Saída Esperada: NÃO é uma matriz identidade.
+
+    // Exemplo 4: Matriz Identidade 1x1
+    int n4 = 1;
+    int id4[n4][n4] = {{1}};
+    printf("Matriz 4:\n");
+    imprimirMatriz(n4, n4, id4);
+    if (ehMatrizIdentidade(n4, id4)) {
+        printf("Matriz 4 É uma matriz identidade.\n\n");
+    } else {
+        printf("Matriz 4 NÃO é uma matriz identidade.\n\n");
+    }
+    // Saída Esperada: É uma matriz identidade.
+
+    // Exemplo 5: Matriz Não Identidade 1x1
+    int n5 = 1;
+    int non_id5[n5][n5] = {{0}};
+    printf("Matriz 5:\n");
+    imprimirMatriz(n5, n5, non_id5);
+    if (ehMatrizIdentidade(n5, non_id5)) {
+        printf("Matriz 5 É uma matriz identidade.\n\n");
+    } else {
+        printf("Matriz 5 NÃO é uma matriz identidade.\n\n");
+    }
+    // Saída Esperada: NÃO é uma matriz identidade.
+
+    // Exemplo 6: Matriz "quase" identidade 2x2
+    int n6 = 2;
+    int non_id6[n6][n6] = {
+        {1, 0},
+        {1, 1} // Elemento [1][0] deveria ser 0
+    };
+    printf("Matriz 6:\n");
+    imprimirMatriz(n6, n6, non_id6);
+    if (ehMatrizIdentidade(n6, non_id6)) {
+        printf("Matriz 6 É uma matriz identidade.\n\n");
+    } else {
+        printf("Matriz 6 NÃO é uma matriz identidade.\n\n");
+    }
+    // Saída Esperada: NÃO é uma matriz identidade.
+
+    return 0;
+}

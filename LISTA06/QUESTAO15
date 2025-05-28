@@ -1,0 +1,102 @@
+#include <stdio.h>
+#include <stdlib.h> // Para rand() e srand()
+#include <time.h>   // Para time()
+
+// Função auxiliar para imprimir um vetor de inteiros
+void imprimirVetor(const int vetor[], int tamanho) {
+    if (tamanho <= 0) {
+        printf("[] (Vetor vazio ou tamanho inválido)\n");
+        return;
+    }
+    printf("[");
+    for (int i = 0; i < tamanho; i++) {
+        printf("%d", vetor[i]);
+        if (i < tamanho - 1) {
+            printf(", ");
+        }
+    }
+    printf("]\n");
+}
+
+/**
+ * @brief Preenche um vetor com valores aleatórios.
+ * O vetor é passado por referência (comportamento padrão para arrays em C).
+ * O tamanho do vetor também é passado por referência (via ponteiro).
+ *
+ * @param vetor Ponteiro para o início do vetor a ser preenchido.
+ * @param ptrTamanho Ponteiro para um inteiro que contém o tamanho do vetor.
+ * O valor apontado por ptrTamanho não será modificado pela função.
+ * Os valores aleatórios gerados estarão no intervalo [0, 99].
+ */
+void preencherVetorAleatorio(int vetor[], const int *ptrTamanho) {
+    // Validação dos ponteiros e do valor do tamanho
+    if (vetor == NULL) {
+        printf("Erro: Ponteiro do vetor é nulo.\n");
+        return;
+    }
+    if (ptrTamanho == NULL) {
+        printf("Erro: Ponteiro para o tamanho é nulo.\n");
+        return;
+    }
+
+    int tamanhoReal = *ptrTamanho; // Obtém o valor do tamanho através do ponteiro
+
+    if (tamanhoReal <= 0) {
+        // Se o tamanho for 0 ou negativo, não há nada a preencher.
+        // Pode-se imprimir uma mensagem ou simplesmente retornar.
+        // printf("Tamanho do vetor é zero ou negativo. Nada a preencher.\n");
+        return;
+    }
+
+    // Preenche o vetor com números aleatórios
+    // É recomendado que srand() seja chamado uma vez no main()
+    for (int i = 0; i < tamanhoReal; i++) {
+        vetor[i] = rand() % 100; // Gera números aleatórios entre 0 e 99
+    }
+}
+
+int main() {
+    // 1. Semente para o gerador de números aleatórios (chamar UMA VEZ)
+    // Isso garante que a cada execução do programa, os números aleatórios sejam diferentes.
+    srand(time(NULL));
+
+    int tamanho1 = 10;
+    int meuVetor1[tamanho1]; // Array com 10 posições
+
+    printf("Vetor 1 ANTES de preencher (pode conter lixo de memória):\n");
+    // Não é ideal imprimir antes de inicializar, mas para demonstração:
+    // imprimirVetor(meuVetor1, tamanho1); // Comentado para evitar mostrar lixo
+
+    // Chama a função passando o vetor e o ENDEREÇO da variável de tamanho
+    preencherVetorAleatorio(meuVetor1, &tamanho1);
+
+    printf("Vetor 1 APÓS preencher com valores aleatórios (0-99):\n");
+    imprimirVetor(meuVetor1, tamanho1);
+
+    printf("\n");
+
+    int tamanho2 = 5;
+    int meuVetor2[tamanho2];
+    preencherVetorAleatorio(meuVetor2, &tamanho2);
+    printf("Vetor 2 APÓS preencher com valores aleatórios (0-99):\n");
+    imprimirVetor(meuVetor2, tamanho2);
+
+    printf("\n");
+
+    // Teste com tamanho 0
+    int tamanho0 = 0;
+    // Mesmo com tamanho 0, precisamos de um array minimamente válido para o ponteiro,
+    // embora a função não deva acessá-lo se tamanho0 for 0.
+    int meuVetor0[1]; // Alocação mínima, não será usado se a lógica de tamanho for correta.
+    printf("Tentando preencher vetor de tamanho 0:\n");
+    preencherVetorAleatorio(meuVetor0, &tamanho0);
+    // A função imprimirVetor também precisa do valor do tamanho, não do ponteiro.
+    imprimirVetor(meuVetor0, tamanho0); // Passa o valor de tamanho0
+
+    // Teste com ponteiro de vetor NULL (a função deve tratar isso)
+    printf("\nTentando preencher com ponteiro de vetor NULO:\n");
+    preencherVetorAleatorio(NULL, &tamanho1); // tamanho1 ainda é 10
+
+
+    return 0;
+}

@@ -1,0 +1,120 @@
+#include <stdio.h>
+
+// Função para imprimir uma matriz
+// (Reutilizada do exemplo anterior, funciona para qualquer dimensão)
+void imprimirMatriz(int linhas, int colunas, int matriz[linhas][colunas]) {
+    printf("Matriz (%dx%d):\n", linhas, colunas);
+    for (int i = 0; i < linhas; i++) {
+        printf("[ ");
+        for (int j = 0; j < colunas; j++) {
+            printf("%3d ", matriz[i][j]); // %3d para alinhar um pouco os números
+        }
+        printf("]\n");
+    }
+    printf("\n");
+}
+
+/**
+ * @brief Calcula a transposta de uma matriz de inteiros.
+ *
+ * A matriz original tem 'linhasOriginal' x 'colunasOriginal' dimensões.
+ * A matriz transposta resultante terá 'colunasOriginal' x 'linhasOriginal' dimensões.
+ *
+ * @param linhasOriginal O número de linhas na matriz original.
+ * @param colunasOriginal O número de colunas na matriz original.
+ * @param matrizOriginal A matriz de entrada a ser transposta.
+ * @param matrizTransposta A matriz onde a transposta será armazenada.
+ * Deve ser pré-alocada com dimensões [colunasOriginal][linhasOriginal].
+ */
+void transporMatriz(int linhasOriginal, int colunasOriginal,
+                    int matrizOriginal[linhasOriginal][colunasOriginal],
+                    int matrizTransposta[colunasOriginal][linhasOriginal]) {
+    // Percorre cada elemento da matriz original
+    for (int i = 0; i < linhasOriginal; i++) {
+        for (int j = 0; j < colunasOriginal; j++) {
+            // Atribui o elemento original[i][j] para transposta[j][i]
+            matrizTransposta[j][i] = matrizOriginal[i][j];
+        }
+    }
+}
+
+int main() {
+    printf("--- Transposição de Matriz ---\n\n");
+
+    // Exemplo 1: Matriz 2x3
+    int L1 = 2;
+    int C1 = 3;
+    int matrizA[L1][C1] = {
+        {1, 2, 3},
+        {4, 5, 6}
+    };
+    // A matriz transposta terá dimensões C1 x L1 (3x2)
+    int matrizATransposta[C1][L1];
+
+    printf("Matriz Original A (2x3):\n");
+    imprimirMatriz(L1, C1, matrizA);
+
+    transporMatriz(L1, C1, matrizA, matrizATransposta);
+
+    printf("Matriz Transposta de A (3x2):\n");
+    imprimirMatriz(C1, L1, matrizATransposta);
+    /*
+    Saída esperada para Matriz Transposta de A:
+    Matriz (3x2):
+    [   1,   4 ]
+    [   2,   5 ]
+    [   3,   6 ]
+    */
+
+    // Exemplo 2: Matriz Quadrada 3x3
+    int L2 = 3;
+    int C2 = 3; // L2 == C2
+    int matrizB[L2][C2] = {
+        {10, 20, 30},
+        {40, 50, 60},
+        {70, 80, 90}
+    };
+    // A matriz transposta também será 3x3
+    int matrizBTransposta[C2][L2];
+
+    printf("Matriz Original B (3x3):\n");
+    imprimirMatriz(L2, C2, matrizB);
+
+    transporMatriz(L2, C2, matrizB, matrizBTransposta);
+
+    printf("Matriz Transposta de B (3x3):\n");
+    imprimirMatriz(C2, L2, matrizBTransposta);
+    /*
+    Saída esperada para Matriz Transposta de B:
+    Matriz (3x3):
+    [  10,  40,  70 ]
+    [  20,  50,  80 ]
+    [  30,  60,  90 ]
+    */
+
+    // Exemplo 3: Matriz Coluna 3x1
+    int L3 = 3;
+    int C3 = 1;
+    int matrizC[L3][C3] = {
+        {100},
+        {200},
+        {300}
+    };
+    // A matriz transposta será uma Matriz Linha 1x3
+    int matrizCTransposta[C3][L3];
+
+    printf("Matriz Original C (3x1 - Vetor Coluna):\n");
+    imprimirMatriz(L3, C3, matrizC);
+
+    transporMatriz(L3, C3, matrizC, matrizCTransposta);
+
+    printf("Matriz Transposta de C (1x3 - Vetor Linha):\n");
+    imprimirMatriz(C3, L3, matrizCTransposta);
+    /*
+    Saída esperada para Matriz Transposta de C:
+    Matriz (1x3):
+    [ 100, 200, 300 ]
+    */
+
+    return 0;
+}

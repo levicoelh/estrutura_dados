@@ -1,0 +1,137 @@
+#include <stdio.h>
+#include <string.h> // Para strcmp, e para snprintf/strcpy na inicialização em main
+
+// Define um tamanho máximo para o nome do aluno
+#define MAX_NOME_ALUNO 100
+
+// 1. Definição da struct Aluno (reutilizada de questões anteriores)
+struct Aluno {
+    char nome[MAX_NOME_ALUNO];
+    int idade;
+    float nota;
+};
+
+// Função para imprimir os dados de um Aluno (reutilizada da questão 11)
+/**
+ * @brief Imprime os dados de uma struct Aluno.
+ *
+ * @param aluno Ponteiro (const) para a struct Aluno cujos dados serão impressos.
+ */
+void imprimirDadosAluno(const struct Aluno *aluno) {
+    if (aluno == NULL) {
+        printf("Erro: Ponteiro para Aluno é nulo. Não é possível imprimir os dados.\n");
+        return;
+    }
+    // Imprime os dados de forma mais detalhada para um aluno encontrado
+    printf("\n--- Detalhes do Aluno Encontrado ---\n");
+    printf("Nome: %s\n", aluno->nome);
+    printf("Idade: %d anos\n", aluno->idade);
+    printf("Nota: %.2f\n", aluno->nota);
+    printf("------------------------------------\n");
+}
+
+
+// 2. Função para buscar um aluno por nome em um vetor de structs Aluno
+/**
+ * @brief Busca um aluno pelo nome em um vetor de Alunos.
+ * A busca é case-sensitive (diferencia maiúsculas de minúsculas).
+ *
+ * @param vetorAlunos Array de structs Aluno onde a busca será realizada.
+ * @param numAlunos O número de alunos no array.
+ * @param nomeBuscado O nome do aluno a ser procurado.
+ * @return Um ponteiro constante para a struct Aluno encontrada, ou NULL se não encontrado
+ * ou se os parâmetros de entrada forem inválidos.
+ */
+const struct Aluno* buscarAlunoPorNome(const struct Aluno vetorAlunos[], int numAlunos, const char *nomeBuscado) {
+    // Validação básica dos parâmetros de entrada
+    if (vetorAlunos == NULL || numAlunos <= 0 || nomeBuscado == NULL || nomeBuscado[0] == '\0') {
+        return NULL; // Retorna NULL se a entrada for inválida
+    }
+
+    // Itera sobre o vetor de alunos
+    for (int i = 0; i < numAlunos; i++) {
+        // Compara o nome do aluno atual com o nome buscado
+        // strcmp retorna 0 se as strings forem idênticas
+        if (strcmp(vetorAlunos[i].nome, nomeBuscado) == 0) {
+            return &vetorAlunos[i]; // Retorna um ponteiro para o aluno encontrado
+        }
+    }
+
+    return NULL; // Retorna NULL se o aluno não for encontrado após percorrer todo o vetor
+}
+
+// Função principal para demonstrar o uso
+int main() {
+    // Criando um vetor de alunos
+    struct Aluno turma[] = {
+        {"Ana Paula Vieira", 20, 9.5f},
+        {"Bruno Costa Lima", 21, 7.0f},
+        {"Carlos Daniel Silva", 19, 8.25f},
+        {"Daniela Fernandes", 20, 6.75f},
+        {"Eduardo Moreira", 22, 9.8f}
+    };
+    // Inicialização segura dos nomes (alternativa se não usar inicializador de lista direto)
+    // Ex: snprintf(turma[0].nome, MAX_NOME_ALUNO, "Ana Paula Vieira");
+
+    int numEstudantesNaTurma = sizeof(turma) / sizeof(turma[0]);
+
+    printf("--- Busca de Aluno por Nome ---\n");
+    printf("Lista de Alunos na Turma:\n");
+    for(int i=0; i < numEstudantesNaTurma; i++) {
+        printf("- %s\n", turma[i].nome);
+    }
+    printf("------------------------------\n");
+
+    const char *nomeParaBuscar;
+    const struct Aluno *alunoEncontrado;
+
+    // Teste 1: Buscar um aluno que existe
+    nomeParaBuscar = "Carlos Daniel Silva";
+    printf("\nBuscando por: \"%s\"\n", nomeParaBuscar);
+    alunoEncontrado = buscarAlunoPorNome(turma, numEstudantesNaTurma, nomeParaBuscar);
+    if (alunoEncontrado != NULL) {
+        imprimirDadosAluno(alunoEncontrado);
+    } else {
+        printf("Aluno \"%s\" não encontrado.\n", nomeParaBuscar);
+    }
+
+    // Teste 2: Buscar um aluno que NÃO existe
+    nomeParaBuscar = "Mariana Oliveira";
+    printf("\nBuscando por: \"%s\"\n", nomeParaBuscar);
+    alunoEncontrado = buscarAlunoPorNome(turma, numEstudantesNaTurma, nomeParaBuscar);
+    if (alunoEncontrado != NULL) {
+        imprimirDadosAluno(alunoEncontrado);
+    } else {
+        printf("Aluno \"%s\" não encontrado.\n", nomeParaBuscar);
+    }
+
+    // Teste 3: Buscar com nome com case diferente (strcmp é case-sensitive)
+    nomeParaBuscar = "ana paula vieira";
+    printf("\nBuscando por (case diferente): \"%s\"\n", nomeParaBuscar);
+    alunoEncontrado = buscarAlunoPorNome(turma, numEstudantesNaTurma, nomeParaBuscar);
+    if (alunoEncontrado != NULL) {
+        imprimirDadosAluno(alunoEncontrado);
+    } else {
+        printf("Aluno \"%s\" não encontrado (busca é case-sensitive).\n", nomeParaBuscar);
+    }
+
+    // Teste 4: Buscar em um "vetor vazio" (passando 0 como número de alunos)
+    printf("\nBuscando em um vetor vazio (0 alunos):\n");
+    alunoEncontrado = buscarAlunoPorNome(turma, 0, "Qualquer Nome");
+    if (alunoEncontrado != NULL) {
+        imprimirDadosAluno(alunoEncontrado);
+    } else {
+        printf("Nenhum aluno para buscar (vetor considerado vazio).\n");
+    }
+
+    // Teste 5: Buscar com nome NULL
+    printf("\nBuscando com nome NULL:\n");
+    alunoEncontrado = buscarAlunoPorNome(turma, numEstudantesNaTurma, NULL);
+    if (alunoEncontrado != NULL) {
+        imprimirDadosAluno(alunoEncontrado);
+    } else {
+        printf("Busca com nome NULL não encontrou resultados (ou entrada inválida).\n");
+    }
+
+    return 0;
+}

@@ -1,0 +1,100 @@
+#include <stdio.h>
+#include <string.h> // Para snprintf ou strcpy na inicialização em main
+
+// Define um tamanho máximo para o nome do aluno
+#define MAX_NOME_ALUNO 100
+
+// 1. Definição da struct Aluno (reutilizada da questão anterior)
+struct Aluno {
+    char nome[MAX_NOME_ALUNO];
+    int idade;
+    float nota;
+};
+
+// Função para imprimir os dados de um Aluno (opcional, para demonstração)
+// (Reutilizada da questão anterior)
+void imprimirDadosAluno(const struct Aluno *aluno) {
+    if (aluno == NULL) {
+        printf("Erro: Ponteiro para Aluno é nulo.\n");
+        return;
+    }
+    printf("Nome: %s, Idade: %d, Nota: %.2f\n", aluno->nome, aluno->idade, aluno->nota);
+}
+
+
+// 2. Função para calcular a média das notas de um vetor de Alunos
+/**
+ * @brief Calcula a média das notas de um vetor de Alunos.
+ *
+ * @param vetorAlunos Array de structs Aluno.
+ * @param numAlunos O número de alunos no array.
+ * @return A média das notas. Retorna 0.0f se não houver alunos ou se numAlunos for <= 0.
+ */
+float mediaNotasAlunos(const struct Aluno vetorAlunos[], int numAlunos) {
+    // Verifica se há alunos para calcular a média
+    if (numAlunos <= 0) {
+        printf("Nenhum aluno no vetor ou número de alunos inválido. Média não pode ser calculada.\n");
+        return 0.0f;
+    }
+
+    double somaDasNotas = 0.0; // Usar double para a soma ajuda a manter a precisão
+
+    // Soma as notas de todos os alunos
+    for (int i = 0; i < numAlunos; i++) {
+        somaDasNotas += vetorAlunos[i].nota;
+    }
+
+    // Calcula a média e converte para float ao retornar
+    return (float)(somaDasNotas / numAlunos);
+}
+
+// Função principal para demonstrar o uso
+int main() {
+    // Criando um vetor de alunos
+    struct Aluno turma[4]; // Um array para 4 alunos
+
+    // Inicializando os dados dos alunos
+    snprintf(turma[0].nome, MAX_NOME_ALUNO, "Ana Paula Vieira");
+    turma[0].idade = 20;
+    turma[0].nota = 9.5f;
+
+    snprintf(turma[1].nome, MAX_NOME_ALUNO, "Bruno Costa Lima");
+    turma[1].idade = 21;
+    turma[1].nota = 7.0f;
+
+    snprintf(turma[2].nome, MAX_NOME_ALUNO, "Carlos Daniel Silva");
+    turma[2].idade = 19;
+    turma[2].nota = 8.25f;
+    
+    snprintf(turma[3].nome, MAX_NOME_ALUNO, "Daniela Fernandes");
+    turma[3].idade = 20;
+    turma[3].nota = 6.75f;
+
+    int numEstudantesNaTurma = 4;
+
+    printf("--- Dados dos Alunos na Turma ---\n");
+    for(int i=0; i < numEstudantesNaTurma; i++) {
+        imprimirDadosAluno(&turma[i]);
+    }
+    printf("----------------------------------\n");
+
+    // Calculando e imprimindo a média das notas da turma
+    float mediaDaTurma = mediaNotasAlunos(turma, numEstudantesNaTurma);
+    printf("\nA média das notas da turma é: %.2f\n", mediaDaTurma);
+    // Soma = 9.5 + 7.0 + 8.25 + 6.75 = 31.5
+    // Média = 31.5 / 4 = 7.875 (será impresso como 7.88 devido ao %.2f)
+
+    // Teste com um vetor "vazio" (passando 0 como número de alunos)
+    printf("\nTentando calcular a média para 0 alunos:\n");
+    float mediaVazia = mediaNotasAlunos(turma, 0); // Passando 0 alunos
+    printf("Média para 0 alunos: %.2f\n", mediaVazia);
+
+    // Teste com um array realmente vazio (se desejado)
+    struct Aluno turmaVazia[1]; // Array formalmente existe, mas não será usado
+    int numAlunosVazios = 0;
+    printf("\nTentando calcular a média para um array efetivamente vazio:\n");
+    float mediaTurmaVazia = mediaNotasAlunos(turmaVazia, numAlunosVazios);
+    printf("Média para turma vazia: %.2f\n", mediaTurmaVazia);
+
+    return 0;
+}

@@ -1,0 +1,57 @@
+#include <stdio.h>
+
+/**
+ * @brief Calcula a média aritmética dos elementos de um vetor de floats.
+ *
+ * @param vetor O array de floats.
+ * @param tamanho O número de elementos no vetor.
+ * @return A média aritmética dos elementos. Retorna 0.0f se o vetor estiver vazio
+ * para evitar divisão por zero.
+ */
+float mediaAritmetica(float vetor[], int tamanho) {
+    // Se o vetor estiver vazio, não há média a calcular (retorna 0 para evitar divisão por zero)
+    if (tamanho == 0) {
+        return 0.0f;
+    }
+
+    float soma = 0.0f;
+    // Soma todos os elementos do vetor
+    for (int i = 0; i < tamanho; i++) {
+        soma += vetor[i];
+    }
+
+    // Calcula e retorna a média
+    return soma / tamanho;
+}
+
+int main() {
+    // Exemplo 1: Vetor com vários números positivos
+    float numeros1[] = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f};
+    int tamanho1 = sizeof(numeros1) / sizeof(numeros1[0]);
+    float media1 = mediaAritmetica(numeros1, tamanho1);
+    printf("Vetor 1: [1.0, 2.0, 3.0, 4.0, 5.0]\n");
+    printf("Média do vetor 1: %.2f\n\n", media1); // Saída esperada: 3.00
+
+    // Exemplo 2: Vetor com números positivos e negativos
+    float numeros2[] = {10.5f, -2.5f, 7.0f, 0.0f, -5.0f};
+    int tamanho2 = sizeof(numeros2) / sizeof(numeros2[0]);
+    float media2 = mediaAritmetica(numeros2, tamanho2);
+    printf("Vetor 2: [10.5, -2.5, 7.0, 0.0, -5.0]\n");
+    printf("Média do vetor 2: %.2f\n\n", media2); // Saída esperada: (10.5 - 2.5 + 7.0 + 0.0 - 5.0) / 5 = 10.0 / 5 = 2.00
+
+    // Exemplo 3: Vetor com um único elemento
+    float numeros3[] = {7.7f};
+    int tamanho3 = sizeof(numeros3) / sizeof(numeros3[0]);
+    float media3 = mediaAritmetica(numeros3, tamanho3);
+    printf("Vetor 3: [7.7]\n");
+    printf("Média do vetor 3: %.2f\n\n", media3); // Saída esperada: 7.70
+
+    // Exemplo 4: Vetor vazio
+    float numeros4[] = {}; // Array vazio
+    int tamanho4 = 0;      // Tamanho explícito 0
+    float media4 = mediaAritmetica(numeros4, tamanho4);
+    printf("Vetor 4: [] (vazio)\n");
+    printf("Média do vetor 4: %.2f\n\n", media4); // Saída esperada: 0.00
+
+    return 0;
+}

@@ -1,0 +1,114 @@
+#include <stdio.h>
+
+// Função para imprimir uma matriz
+void imprimirMatriz(int linhas, int colunas, int matriz[linhas][colunas]) {
+    printf("Matriz (%dx%d):\n", linhas, colunas);
+    for (int i = 0; i < linhas; i++) {
+        printf("[ ");
+        for (int j = 0; j < colunas; j++) {
+            printf("%3d ", matriz[i][j]); // %3d para alinhar um pouco os números
+        }
+        printf("]\n");
+    }
+    printf("\n");
+}
+
+/**
+ * @brief Soma duas matrizes de inteiros de mesma dimensão.
+ *
+ * A função assume que as três matrizes (matrizA, matrizB, matrizResultado)
+ * têm as dimensões especificadas por 'linhas' e 'colunas'.
+ *
+ * @param linhas O número de linhas nas matrizes.
+ * @param colunas O número de colunas nas matrizes.
+ * @param matrizA A primeira matriz a ser somada.
+ * @param matrizB A segunda matriz a ser somada.
+ * @param matrizResultado A matriz onde a soma será armazenada.
+ */
+void somaMatrizes(int linhas, int colunas,
+                  int matrizA[linhas][colunas],
+                  int matrizB[linhas][colunas],
+                  int matrizResultado[linhas][colunas]) {
+    // Percorre cada elemento das matrizes
+    for (int i = 0; i < linhas; i++) {
+        for (int j = 0; j < colunas; j++) {
+            // Soma os elementos correspondentes e armazena na matriz resultado
+            matrizResultado[i][j] = matrizA[i][j] + matrizB[i][j];
+        }
+    }
+}
+
+int main() {
+    // Definindo as dimensões das matrizes
+    int N_LINHAS = 2;
+    int N_COLUNAS = 3;
+
+    // Declarando e inicializando as matrizes de entrada
+    int matriz1[N_LINHAS][N_COLUNAS] = {
+        {1, 2, 3},
+        {4, 5, 6}
+    };
+
+    int matriz2[N_LINHAS][N_COLUNAS] = {
+        {7, 8, 9},
+        {10, 11, 12}
+    };
+
+    // Declarando a matriz para armazenar o resultado
+    int matrizSoma[N_LINHAS][N_COLUNAS];
+
+    printf("--- Soma de Matrizes ---\n\n");
+
+    printf("Matriz A:\n");
+    imprimirMatriz(N_LINHAS, N_COLUNAS, matriz1);
+
+    printf("Matriz B:\n");
+    imprimirMatriz(N_LINHAS, N_COLUNAS, matriz2);
+
+    // Chamando a função para somar as matrizes
+    somaMatrizes(N_LINHAS, N_COLUNAS, matriz1, matriz2, matrizSoma);
+
+    printf("Matriz Resultante (A + B):\n");
+    imprimirMatriz(N_LINHAS, N_COLUNAS, matrizSoma);
+    /*
+    Saída esperada para Matriz Resultante:
+    Matriz (2x3):
+    [   8,  10,  12 ]
+    [  14,  16,  18 ]
+    */
+
+    // Exemplo com matrizes 3x2
+    int L2 = 3;
+    int C2 = 2;
+
+    int matX[L2][C2] = {
+        {10, 20},
+        {30, 40},
+        {50, 60}
+    };
+    int matY[L2][C2] = {
+        {1, 2},
+        {3, 4},
+        {5, 6}
+    };
+    int matSomaXY[L2][C2];
+
+    printf("\n--- Novo Exemplo (Matrizes 3x2) ---\n\n");
+    printf("Matriz X:\n");
+    imprimirMatriz(L2, C2, matX);
+    printf("Matriz Y:\n");
+    imprimirMatriz(L2, C2, matY);
+
+    somaMatrizes(L2, C2, matX, matY, matSomaXY);
+    printf("Matriz Resultante (X + Y):\n");
+    imprimirMatriz(L2, C2, matSomaXY);
+    /*
+    Saída esperada para Matriz Resultante (X+Y):
+    Matriz (3x2):
+    [  11,  22 ]
+    [  33,  44 ]
+    [  55,  66 ]
+    */
+
+    return 0;
+}

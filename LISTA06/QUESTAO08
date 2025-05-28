@@ -1,0 +1,158 @@
+#include <stdio.h>
+
+// Função para imprimir uma matriz
+// (Reutilizada de exemplos anteriores)
+void imprimirMatriz(int linhas, int colunas, int matriz[linhas][colunas]) {
+    printf("Matriz (%dx%d):\n", linhas, colunas);
+    for (int i = 0; i < linhas; i++) {
+        printf("[ ");
+        for (int j = 0; j < colunas; j++) {
+            printf("%4d ", matriz[i][j]); // %4d para alinhar um pouco os números
+        }
+        printf("]\n");
+    }
+    printf("\n");
+}
+
+/**
+ * @brief Multiplica duas matrizes de inteiros.
+ *
+ * Verifica se as dimensões são compatíveis (colunas de A == linhas de B).
+ * Se compatíveis, calcula matrizResultado = matrizA * matrizB.
+ * A matrizResultado deve ser pré-alocada com dimensões [lA][cB].
+ *
+ * @param lA Número de linhas da matrizA.
+ * @param cA Número de colunas da matrizA.
+ * @param matrizA A primeira matriz (multiplicando).
+ * @param lB Número de linhas da matrizB.
+ * @param cB Número de colunas da matrizB.
+ * @param matrizB A segunda matriz (multiplicador).
+ * @param matrizResultado Matriz para armazenar o produto. Deve ter dimensões lA x cB.
+ * @return 1 se a multiplicação for bem-sucedida, 0 se as dimensões forem incompatíveis.
+ */
+int multiplicarMatrizes(int lA, int cA, int matrizA[lA][cA],
+                        int lB, int cB, int matrizB[lB][cB],
+                        int matrizResultado[lA][cB]) {
+
+    // Verifica a compatibilidade das dimensões
+    // O número de colunas da primeira matriz (cA) deve ser igual ao número de linhas da segunda (lB)
+    if (cA != lB) {
+        return 0; // Retorna 0 para indicar falha (dimensões incompatíveis)
+    }
+
+    // Realiza a multiplicação
+    // Itera sobre as linhas da matrizA (que serão as linhas da matrizResultado)
+    for (int i = 0; i < lA; i++) {
+        // Itera sobre as colunas da matrizB (que serão as colunas da matrizResultado)
+        for (int j = 0; j < cB; j++) {
+            // Calcula o elemento matrizResultado[i][j]
+            matrizResultado[i][j] = 0; // Inicializa o elemento da soma
+            // Itera sobre a dimensão comum (colunas de A / linhas de B)
+            for (int k = 0; k < cA; k++) { // cA ou lB, pois são iguais
+                matrizResultado[i][j] += matrizA[i][k] * matrizB[k][j];
+            }
+        }
+    }
+
+    return 1; // Retorna 1 para indicar sucesso
+}
+
+int main() {
+    printf("--- Multiplicação de Matrizes ---\n\n");
+
+    // Exemplo 1: Matrizes compatíveis para multiplicação
+    int la1 = 2, ca1 = 3; // Matriz A é 2x3
+    int matA[la1][ca1] = {
+        {1, 2, 3},
+        {4, 5, 6}
+    };
+
+    int lb1 = 3, cb1 = 2; // Matriz B é 3x2
+    int matB[lb1][cb1] = {
+        {7, 8},
+        {9, 10},
+        {11, 12}
+    };
+
+    // Matriz resultado será la1 x cb1 (2x2)
+    int matResultado1[la1][cb1];
+
+    printf("Matriz A (2x3):\n");
+    imprimirMatriz(la1, ca1, matA);
+    printf("Matriz B (3x2):\n");
+    imprimirMatriz(lb1, cb1, matB);
+
+    if (multiplicarMatrizes(la1, ca1, matA, lb1, cb1, matB, matResultado1)) {
+        printf("Produto de A * B (2x2):\n");
+        imprimirMatriz(la1, cb1, matResultado1);
+        /* Saída Esperada para matResultado1:
+           Matriz (2x2):
+           [   58,   64 ]
+           [  139,  154 ]
+        */
+    } else {
+        printf("Não foi possível multiplicar Matriz A e Matriz B: dimensões incompatíveis.\n");
+        printf("Colunas de A (%d) devem ser iguais às Linhas de B (%d).\n", ca1, lb1);
+    }
+    printf("-------------------------------------\n\n");
+
+
+    // Exemplo 2: Matrizes incompatíveis para multiplicação
+    int la2 = 2, ca2 = 3; // Matriz C é 2x3
+    int matC[la2][ca2] = {
+        {1, 0, 0},
+        {0, 1, 0}
+    };
+
+    int lb2 = 2, cb2 = 2; // Matriz D é 2x2
+    int matD[lb2][cb2] = {
+        {5, 5},
+        {5, 5}
+    };
+    // Se fosse possível, o resultado seria la2 x cb2 (2x2)
+    // Mas não será, pois ca2 (3) != lb2 (2)
+    int matResultado2[la2][cb2];
+
+    printf("Matriz C (2x3):\n");
+    imprimirMatriz(la2, ca2, matC);
+    printf("Matriz D (2x2):\n");
+    imprimirMatriz(lb2, cb2, matD);
+
+    if (multiplicarMatrizes(la2, ca2, matC, lb2, cb2, matD, matResultado2)) {
+        printf("Produto de C * D (2x2):\n");
+        imprimirMatriz(la2, cb2, matResultado2);
+    } else {
+        printf("Não foi possível multiplicar Matriz C e Matriz D: dimensões incompatíveis.\n");
+        printf("Colunas de C (%d) devem ser iguais às Linhas de D (%d).\n", ca2, lb2);
+        // Saída Esperada: Mensagem de incompatibilidade.
+    }
+    printf("-------------------------------------\n\n");
+
+    // Exemplo 3: Multiplicação por matriz identidade
+    int la3 = 2, ca3 = 2; // Matriz E é 2x2
+    int matE[la3][ca3] = {
+        {10, 20},
+        {30, 40}
+    };
+    int lb3 = 2, cb3 = 2; // Matriz Identidade I é 2x2
+    int matI[lb3][cb3] = {
+        {1, 0},
+        {0, 1}
+    };
+    int matResultado3[la3][cb3]; // Resultado será 2x2
+
+    printf("Matriz E (2x2):\n");
+    imprimirMatriz(la3, ca3, matE);
+    printf("Matriz Identidade I (2x2):\n");
+    imprimirMatriz(lb3, cb3, matI);
+
+    if (multiplicarMatrizes(la3, ca3, matE, lb3, cb3, matI, matResultado3)) {
+        printf("Produto de E * I (2x2):\n");
+        imprimirMatriz(la3, cb3, matResultado3); // Deve ser igual à Matriz E
+    } else {
+         printf("Não foi possível multiplicar Matriz E e Matriz I: dimensões incompatíveis.\n");
+    }
+
+
+    return 0;
+}

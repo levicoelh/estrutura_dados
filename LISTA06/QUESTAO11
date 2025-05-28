@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <string.h> // Necessário para strcpy ou snprintf, se usados na inicialização
+
+// Define um tamanho máximo para o nome do aluno para evitar estouro de buffer
+#define MAX_NOME_ALUNO 100
+
+// 1. Definição da struct Aluno
+struct Aluno {
+    char nome[MAX_NOME_ALUNO];
+    int idade;
+    float nota;
+};
+
+// 2. Função para imprimir os dados de um Aluno
+/**
+ * @brief Imprime os dados de uma struct Aluno.
+ *
+ * @param aluno Ponteiro para a struct Aluno cujos dados serão impressos.
+ * Usar um ponteiro (const struct Aluno *) é eficiente e indica
+ * que a função não modificará os dados do aluno.
+ */
+void imprimirDadosAluno(const struct Aluno *aluno) {
+    // Verificação para o caso de um ponteiro nulo ser passado
+    if (aluno == NULL) {
+        printf("Erro: Ponteiro para Aluno é nulo. Não é possível imprimir os dados.\n");
+        return;
+    }
+
+    printf("\n--- Dados do Aluno ---\n");
+    printf("Nome: %s\n", aluno->nome);         // Acessa o campo 'nome' usando o operador ->
+    printf("Idade: %d anos\n", aluno->idade);  // Acessa o campo 'idade'
+    printf("Nota: %.2f\n", aluno->nota);     // Acessa o campo 'nota', formatado com 2 casas decimais
+    printf("----------------------\n");
+}
+
+// Função principal para demonstrar o uso da struct e da função de impressão
+int main() {
+    // Criando e inicializando a primeira instância de Aluno
+    struct Aluno aluno1;
+
+    // Copiando o nome para o campo 'nome' da struct Aluno
+    // Usar snprintf é mais seguro para evitar estouro de buffer
+    snprintf(aluno1.nome, MAX_NOME_ALUNO, "Joao Victor Oliveira");
+    // Alternativamente, para strings literais curtas, strcpy pode ser usado, mas com cautela:
+    // strcpy(aluno1.nome, "Joao Victor Oliveira");
+
+    aluno1.idade = 20;
+    aluno1.nota = 8.75f; // 'f' no final para indicar que é um float literal
+
+    // Criando e inicializando a segunda instância de Aluno usando inicializadores de lista (C99+)
+    // Este método é conveniente e seguro para strings literais, desde que não excedam MAX_NOME_ALUNO-1
+    struct Aluno aluno2 = {"Maria Clara Souza", 19, 9.2f};
+
+    // Criando uma terceira instância
+    struct Aluno aluno3;
+    snprintf(aluno3.nome, MAX_NOME_ALUNO, "Carlos Eduardo Pereira Lima Santos");
+    aluno3.idade = 22;
+    aluno3.nota = 7.5f;
+
+    // Chamando a função para imprimir os dados dos alunos
+    imprimirDadosAluno(&aluno1); // Passa o endereço da struct aluno1
+    imprimirDadosAluno(&aluno2); // Passa o endereço da struct aluno2
+    imprimirDadosAluno(&aluno3);
+
+    // Exemplo de como a função lida com um ponteiro nulo (descomente para testar)
+    /*
+    struct Aluno *alunoNulo = NULL;
+    printf("\nTentando imprimir aluno nulo:\n");
+    imprimirDadosAluno(alunoNulo);
+    */
+
+    return 0;
+}

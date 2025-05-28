@@ -1,0 +1,100 @@
+#include <stdio.h>
+
+// Função para imprimir os elementos de um vetor
+void imprimirVetor(int vetor[], int tamanho) {
+    printf("[");
+    for (int i = 0; i < tamanho; i++) {
+        printf("%d", vetor[i]);
+        if (i < tamanho - 1) {
+            printf(", ");
+        }
+    }
+    printf("]\n");
+}
+
+// Função para inverter a ordem dos elementos de um vetor
+void inverterVetor(int vetor[], int tamanho) {
+    if (tamanho <= 1) {
+        return; // Não há o que fazer para vetores vazios ou com um único elemento
+    }
+
+    int inicio = 0;
+    int fim = tamanho - 1;
+    int temp; // Variável temporária para a troca
+
+    while (inicio < fim) {
+        // Troca o elemento do início com o elemento do fim
+        temp = vetor[inicio];
+        vetor[inicio] = vetor[fim];
+        vetor[fim] = temp;
+
+        // Move os ponteiros/índices para o centro
+        inicio++;
+        fim--;
+    }
+}
+
+int main() {
+    // Exemplo 1: Vetor com número ímpar de elementos
+    int numeros1[] = {1, 2, 3, 4, 5};
+    int tamanho1 = sizeof(numeros1) / sizeof(numeros1[0]);
+
+    printf("Vetor original 1: ");
+    imprimirVetor(numeros1, tamanho1);
+    inverterVetor(numeros1, tamanho1);
+    printf("Vetor invertido 1: ");
+    imprimirVetor(numeros1, tamanho1); // Saída: Vetor invertido 1: [5, 4, 3, 2, 1]
+    printf("\n");
+
+    // Exemplo 2: Vetor com número par de elementos
+    int numeros2[] = {10, 20, 30, 40};
+    int tamanho2 = sizeof(numeros2) / sizeof(numeros2[0]);
+
+    printf("Vetor original 2: ");
+    imprimirVetor(numeros2, tamanho2);
+    inverterVetor(numeros2, tamanho2);
+    printf("Vetor invertido 2: ");
+    imprimirVetor(numeros2, tamanho2); // Saída: Vetor invertido 2: [40, 30, 20, 10]
+    printf("\n");
+
+    // Exemplo 3: Vetor com um único elemento
+    int numeros3[] = {7};
+    int tamanho3 = sizeof(numeros3) / sizeof(numeros3[0]);
+
+    printf("Vetor original 3: ");
+    imprimirVetor(numeros3, tamanho3);
+    inverterVetor(numeros3, tamanho3);
+    printf("Vetor invertido 3: ");
+    imprimirVetor(numeros3, tamanho3); // Saída: Vetor invertido 3: [7]
+    printf("\n");
+
+    // Exemplo 4: Vetor vazio (tamanho 0)
+    // Em C, um array declarado como `int numeros4[] = {};` pode ter um comportamento
+    // dependente do compilador em termos de `sizeof`.
+    // A forma mais segura de representar um vetor vazio para a função é passar tamanho 0.
+    int numeros4_data[] = {}; // Pode ou não ser o que se espera
+    int tamanho4 = 0;       // Explícito que não há elementos a processar
+
+    // int* numeros4_ptr = NULL; // Outra forma de indicar ausência de dados
+
+    printf("Vetor original 4 (tamanho 0): ");
+    imprimirVetor(numeros4_data, tamanho4); // Passando o array e tamanho 0
+    inverterVetor(numeros4_data, tamanho4);
+    printf("Vetor invertido 4 (tamanho 0): ");
+    imprimirVetor(numeros4_data, tamanho4); // Saída: Vetor invertido 4 (tamanho 0): []
+    printf("\n");
+    
+    // Exemplo 5: Vetor com dois elementos
+    int numeros5[] = {100, 200};
+    int tamanho5 = sizeof(numeros5) / sizeof(numeros5[0]);
+
+    printf("Vetor original 5: ");
+    imprimirVetor(numeros5, tamanho5);
+    inverterVetor(numeros5, tamanho5);
+    printf("Vetor invertido 5: ");
+    imprimirVetor(numeros5, tamanho5); // Saída: Vetor invertido 5: [200, 100]
+    printf("\n");
+
+
+    return 0;
+}
